@@ -32,8 +32,7 @@ const CarburantsPompistePage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
-  // State for SaisieIndexModal
-  const [isIndexModalOpen, setIsIndexModalOpen] = useState(false);
+  // State for selectedCuveForIndex
   const [selectedCuveForIndex, setSelectedCuveForIndex] = useState<CuveData | null>(null);
 
   const fetchCuvesData = async (isInitialLoad = false) => {
@@ -62,11 +61,9 @@ const CarburantsPompistePage: React.FC = () => {
   // --- Modal Handler Functions ---
   const handleOpenIndexModal = (cuve: CuveData) => {
     setSelectedCuveForIndex(cuve);
-    setIsIndexModalOpen(true);
   };
 
   const handleCloseIndexModal = () => {
-    setIsIndexModalOpen(false);
     setSelectedCuveForIndex(null);
   };
 

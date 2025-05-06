@@ -13,53 +13,50 @@ const ChartPlaceholder: React.FC = () => (
 
 // Placeholder for the mini calendar
 const MiniCalendarPlaceholder: React.FC = () => {
-     // Simplified static data for demonstration
-     const days = ['D', 'L', 'M', 'M', 'J', 'V', 'S']; // Or DAY in image
-     const dates = [
-         [null, null, null, null, 1, 1, 1], // Assuming '1' represents a date cell
-         [1, 1, 1, 1, 1, 1, 1],
-         [1, 1, 1, 1, 1, 1, 1],
-         [1, 1, 1, 1, 1, 1, 1],
-         [1, 1, 1, 1, null, null, null],
-     ];
-     const highlightedDates = [4, 11]; // Example: 4th and 11th day cells are highlighted
-
+    // Simplified static data for demonstration
+    const dates = [
+        [null, null, null, null, 1, 1, 1], // Assuming '1' represents a date cell
+        [1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, null, null, null],
+    ];
+    const highlightedDates = [4, 11]; // Example: 4th and 11th day cells are highlighted
     let dayIndex = 0; // To track which '1' we are on for highlighting
 
-     return (
-         <div className="p-4 bg-white rounded-lg shadow "> {/* Calendar container */}
-             {/* Month Navigation */}
-             <div className="flex items-center justify-between mb-4">
-                 <button className="p-1 rounded-md hover:bg-gray-100 text-gray-500 hover:text-gray-700">
-                     <FiChevronLeft className="h-5 w-5" />
-                 </button>
-                 <span className="text-sm font-semibold text-gray-700">Dec 2020</span>
-                 <button className="p-1 rounded-md hover:bg-gray-100 text-gray-500 hover:text-gray-700">
-                     <FiChevronRight className="h-5 w-5" />
-                 </button>
-             </div>
+    return (
+        <div className="p-4 bg-white rounded-lg shadow "> {/* Calendar container */}
+            {/* Month Navigation */}
+            <div className="flex items-center justify-between mb-4">
+                <button className="p-1 rounded-md hover:bg-gray-100 text-gray-500 hover:text-gray-700">
+                    <FiChevronLeft className="h-5 w-5" />
+                </button>
+                <span className="text-sm font-semibold text-gray-700">Dec 2020</span>
+                <button className="p-1 rounded-md hover:bg-gray-100 text-gray-500 hover:text-gray-700">
+                    <FiChevronRight className="h-5 w-5" />
+                </button>
+            </div>
 
-             {/* Day Headers */}
+            {/* Day Headers */}
             {/* Image uses "DAY", changing to match */}
-             {/* <div className="grid grid-cols-7 gap-1 text-center text-xs text-gray-500 mb-2">
-                 {days.map(day => <div key={day}>{day}</div>)}
-             </div> */}
-             <div className="grid grid-cols-7 gap-x-1 gap-y-2 text-center text-xs text-gray-500 mb-2">
+            {/* <div className="grid grid-cols-7 gap-1 text-center text-xs text-gray-500 mb-2">
+                {days.map(day => <div key={day}>{day}</div>)}
+            </div> */}
+            <div className="grid grid-cols-7 gap-x-1 gap-y-2 text-center text-xs text-gray-500 mb-2">
                 {Array(7).fill(0).map((_, i) => <div key={i}>DAY</div>)}
-             </div>
+            </div>
 
-
-             {/* Dates Grid */}
-             <div className="grid grid-cols-7 gap-x-1 gap-y-2 text-center text-sm">
-                 {dates.flat().map((date, index) => {
-                     const isPlaceholder = date === null;
-                     let isHighlighted = false;
-                     if (date === 1) {
+            {/* Dates Grid */}
+            <div className="grid grid-cols-7 gap-x-1 gap-y-2 text-center text-sm">
+                {dates.flat().map((date, index) => {
+                    const isPlaceholder = date === null;
+                    let isHighlighted = false;
+                    if (date === 1) {
                         dayIndex++;
                         isHighlighted = highlightedDates.includes(dayIndex);
-                     }
+                    }
 
-                     return (
+                    return (
                         <div
                             key={index}
                             className={`
@@ -67,15 +64,15 @@ const MiniCalendarPlaceholder: React.FC = () => {
                                 ${isPlaceholder ? 'text-transparent' : 'text-gray-700'}
                                 ${isHighlighted ? 'bg-purple-600 text-white font-semibold' : ''}
                             `}
-                         >
-                           {date}
+                        >
+                            {date}
                         </div>
                     )
-                  })}
-             </div>
-         </div>
-     );
- };
+                })}
+            </div>
+        </div>
+    );
+};
 
 
 const DashboardPage: React.FC = () => {
