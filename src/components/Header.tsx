@@ -25,7 +25,7 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileSidebar }) => {
     navigate('/login');
   };
 
-  const navLinkBaseClasses = "p-2 rounded-md text-gray-500 hover:text-purple-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-purple-500";
+  const navLinkBaseClasses = "p-2 rounded-md text-gray-500 hover:text-purple-600  focus:outline-none focus:ring-2 focus:ring-inset focus:ring-purple-500";
   const navLinkTextClasses = "text-sm font-medium";
 
   return (
@@ -54,10 +54,10 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileSidebar }) => {
                 <span className="absolute top-0 right-0 block h-4 w-4 transform -translate-y-1/2 translate-x-1/2 rounded-full text-white shadow-solid bg-red-500 text-xs flex items-center justify-center">5</span>
               </Link>
               {/* Bouton de déconnexion qui ouvre le modal */}
-              <button onClick={handleDeconnexion} className={navLinkBaseClasses} aria-label="Déconnexion">
+              <Link to="#" onClick={handleDeconnexion} className={navLinkBaseClasses} aria-label="Déconnexion">
                 <span className={`hidden md:inline ${navLinkTextClasses}`}>Déconnexion</span>
                 <FiLogOut className="h-5 w-5 md:hidden" />
-              </button>
+              </Link>
               <button className="flex ml-2 text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500" aria-label="Menu utilisateur">
                 <img className="h-9 w-9 rounded-full" src={userAvatarUrl} alt="User avatar" />
               </button>

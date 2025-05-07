@@ -35,7 +35,7 @@ const ProfilPage: React.FC = () => {
       <h1 className="text-2xl font-semibold text-gray-800 border-b-2 border-purple-600 inline-block pr-4 pb-1 mb-8">
         Mon Profil
       </h1>
-      <div className="bg-white p-6 md:p-8 rounded-lg shadow-md max-w-2xl mx-auto">
+      <div className="bg-white p-6 rounded-lg shadow-md">
         <div className="flex flex-col items-center md:flex-row md:items-start space-y-6 md:space-y-0 md:space-x-8">
           <div className="relative">
             <img

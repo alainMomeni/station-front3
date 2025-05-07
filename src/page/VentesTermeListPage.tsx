@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import DashboardLayout from '../layouts/DashboardLayout';
-import { FiPlus, FiSearch, FiChevronDown, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { FiPlus, FiSearch, FiChevronDown, FiChevronLeft, FiChevronRight, FiEdit, FiEye, FiTrash2 } from 'react-icons/fi';
 
 interface VenteTerme {
   id: string;
@@ -25,8 +25,6 @@ const VentesTermeListPage: React.FC = () => {
   const totalPages = 5; // Example
 
   // Placeholder actions - customize as needed
-  const handleView = (id: string) => alert(`Voir détails Vente à Terme: ${id}`);
-  const handleMarkAsPaid = (id: string) => alert(`Marquer Vente à Terme comme payée: ${id}`);
   const handleDelete = (id: string) => alert(`Supprimer Vente à Terme: ${id}`);
 
   const handlePageChange = (page: number) => {
@@ -49,6 +47,14 @@ const VentesTermeListPage: React.FC = () => {
     }
   };
 
+  function handleViewDetails(_id: string): void {
+    throw new Error('Function not implemented.');
+  }
+
+  function handleEditVente(_id: string): void {
+    throw new Error('Function not implemented.');
+  }
+
   return (
     <DashboardLayout>
       <div className="flex justify-between items-center mb-6">
@@ -57,7 +63,7 @@ const VentesTermeListPage: React.FC = () => {
         </h1>
         <Link
           to="/ventes/terme/nouveau" // Route for new credit sale form
-          className="inline-flex items-center px-4 py-2 bg-green-500 text-white text-sm font-medium rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 shadow-sm"
+          className="inline-flex items-center px-4 py-2 bg-purple-500 text-white text-sm font-medium rounded-md hover:bg-purple-600 focus:outline-none  shadow-sm"
         >
           <FiPlus className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
           Nouveau
@@ -130,12 +136,10 @@ const VentesTermeListPage: React.FC = () => {
                         {vente.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                     <button onClick={() => handleView(vente.id)} className="text-purple-600 hover:text-purple-900">Voir</button>
-                    {vente.status === 'En attente' && (
-                         <button onClick={() => handleMarkAsPaid(vente.id)} className="text-green-600 hover:text-green-900">Payer</button>
-                    )}
-                     <button onClick={() => handleDelete(vente.id)} className="text-red-600 hover:text-red-900">Suppr.</button>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-3">
+                     <button onClick={() => handleViewDetails(vente.id)} className="text-blue-600 hover:text-blue-900 transition duration-150 ease-in-out" title="Voir détails"><FiEye size={16}/></button>
+                     <button onClick={() => handleEditVente(vente.id)} className="text-purple-600 hover:text-purple-900 transition duration-150 ease-in-out" title="Modifier"><FiEdit size={16}/></button>
+                     <button onClick={() => handleDelete(vente.id)} className="text-red-600 hover:text-red-900 transition duration-150 ease-in-out" title="Supprimer"><FiTrash2 size={16}/></button>
                   </td>
                 </tr>
               ))}
