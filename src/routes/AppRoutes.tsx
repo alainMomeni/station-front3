@@ -1,52 +1,86 @@
 // src/routes/AppRoutes.tsx
 import React from 'react';
 import { Routes, Route, Navigate, Link } from 'react-router-dom';
+import DashboardLayout from '../layouts/DashboardLayout'; // Vérifiez/Adaptez le chemin
 
-// Layout Import (pour la page 404 par exemple)
-import DashboardLayout from '../layouts/DashboardLayout'; // Assurez-vous que ce chemin est correct
+// --- Importations des Pages ---
 
-// Page Imports - Assurez-vous que ces chemins sont corrects par rapport à 'src/routes/'
-import DashboardPage from '../page/DashboardPage';
-import VentesListPage from '../page/VentesListPage';
-import VentesFormPage from '../page/VentesFormPage';
-import AgendaPage from '../page/AgendaPage';
-import VentesTermeListPage from '../page/VentesTermeListPage';
-import VentesTermeFormPage from '../page/VentesTermeFormPage';
-import SignalerAbsencePage from '../page/SignalerAbsencePage';
-import SignalerDysfonctionnementPage from '../page/SignalerDysfonctionnementPage';
-import CarburantsPompistePage from '../page/CarburantsPompistePage';
-import ProfilPage from '../page/ProfilPage';
-import NotificationsPage from '../page/NotificationsPage';
+// Communes / Login
 import LoginPage from '../page/login/LoginPage';
+import DashboardPage from '../page/pompiste/DashboardPage';
+import ProfilPage from '../page/pompiste/ProfilPage';
+import NotificationsPage from '../page/pompiste/NotificationsPage';
+import AgendaPage from '../page/pompiste/AgendaPage';
+import SignalerAbsencePage from '../page/pompiste/SignalerAbsencePage';
+// La 404 est gérée directement dans le JSX
+
+// Pompiste (vérifiez les chemins réels si dans un dossier pompiste/)
+import VentesListPage from '../page/pompiste/VentesListPage';
+import VentesFormPage from '../page/pompiste/VentesFormPage';
+import VentesTermeListPage from '../page/pompiste/VentesTermeListPage';
+import VentesTermeFormPage from '../page/pompiste/VentesTermeFormPage';
+import CarburantsPompistePage from '../page/pompiste/CarburantsPompistePage';
+import SignalerDysfonctionnementPage from '../page/pompiste/SignalerDysfonctionnementPage';
+
+// Caissier (vérifiez les chemins réels dans page/caissier/)
+import DashboardCaissierPage from '../page/caisssier/DashboardCaissierPage';
+import VentesCaisseListPage from '../page/caisssier/VentesCaisseListPage';
+import VentesCaisseFormPage from '../page/caisssier/VentesCaisseFormPage';
+import VentesTermeCaisseListPage from '../page/caisssier/VentesTermeCaisseListPage';
+import VentesTermeCaisseFormPage from '../page/caisssier/VentesTermeCaisseFormPage';
+import StockBoutiquePage from '../page/caisssier/StockBoutiquePage';
+import SignalementEcartPage from '../page/caisssier/SignalementEcartPage';
+
+
+// --- Configuration des Routes ---
 
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      {/* La route /login affiche le composant LoginPage */}
+      {/* ----- Authentification et Racine ----- */}
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/" element={<Navigate replace to="/login" />} /> {/* Redirige vers login par défaut */}
 
-      {/* La racine "/" redirige maintenant vers /login par défaut */}
-      <Route path="/" element={<Navigate replace to="/login" />} />
+      {/* ----- Routes Principales (Post-Login) ----- */}
 
-      {/* Les autres routes pour les interfaces du dashboard */}
-      <Route path="/dashboard" element={<DashboardPage />} />
+      {/* Dashboards Spécifiques */}
+      <Route path="/dashboard" element={<DashboardPage />} />           {/* Défaut / Pompiste */}
+      <Route path="/dashboard-caissier" element={<DashboardCaissierPage />} /> {/* Caissier */}
+
+      {/* Routes Accessibles aux Deux Rôles (potentiellement) */}
       <Route path="/profil" element={<ProfilPage />} />
       <Route path="/notifications" element={<NotificationsPage />} />
+      <Route path="/agenda" element={<AgendaPage />} />
+      <Route path="/signalements/absence" element={<SignalerAbsencePage />} />
 
+      {/* --- Routes Spécifiques Pompiste --- */}
+      {/* Section Ventes Carburant */}
       <Route path="/ventes" element={<Navigate replace to="/ventes/directes" />} />
       <Route path="/ventes/directes" element={<VentesListPage />} />
       <Route path="/ventes/nouveau" element={<VentesFormPage />} />
       <Route path="/ventes/terme" element={<VentesTermeListPage />} />
       <Route path="/ventes/terme/nouveau" element={<VentesTermeFormPage />} />
-
-      <Route path="/agenda" element={<AgendaPage />} />
+      {/* Ajouter '/ventes/modifier/:id', '/ventes/details/:id' si nécessaire */}
+      {/* Gestion Cuves */}
       <Route path="/carburants" element={<CarburantsPompistePage />} />
-
-      <Route path="/signalements" element={<Navigate replace to="/signalements/absence" />} />
-      <Route path="/signalements/absence" element={<SignalerAbsencePage />} />
+      {/* Signalement Matériel */}
       <Route path="/signalements/dysfonctionnement" element={<SignalerDysfonctionnementPage />} />
 
-      {/* Page 404 - Route de secours */}
+      {/* --- Routes Spécifiques Caissier --- */}
+      {/* Section Ventes Boutique */}
+      <Route path="/caisse/ventes" element={<Navigate replace to="/caisse/ventes/directes" />} />
+      <Route path="/caisse/ventes/directes" element={<VentesCaisseListPage />} />
+      <Route path="/caisse/ventes/nouveau" element={<VentesCaisseFormPage />} />
+      <Route path="/caisse/ventes/terme" element={<VentesTermeCaisseListPage />} />
+      <Route path="/caisse/ventes/terme/nouveau" element={<VentesTermeCaisseFormPage />} />
+       {/* Ajouter '/caisse/ventes/modifier/:id', '/caisse/ventes/details/:id' si nécessaire */}
+      {/* Stock Boutique */}
+      <Route path="/caisse/stock" element={<StockBoutiquePage />} />
+      {/* Signalement Écart Caisse */}
+      <Route path="/signalements/ecart-caisse" element={<SignalementEcartPage />} />
+
+
+      {/* ----- Page Non Trouvée (404) - Doit être la dernière ----- */}
       <Route
         path="*"
         element={
@@ -60,7 +94,7 @@ const AppRoutes: React.FC = () => {
                 La page que vous recherchez n'existe pas ou a été déplacée.
               </p>
               <Link
-                to="/dashboard"
+                to="/dashboard" // Retour générique
                 className="mt-8 inline-block px-6 py-3 bg-purple-600 text-white text-sm font-semibold rounded-md hover:bg-purple-700 transition-colors"
               >
                 Retour au Dashboard

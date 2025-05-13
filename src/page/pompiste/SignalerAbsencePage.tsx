@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import DashboardLayout from '../layouts/DashboardLayout';
-import Spinner from '../components/Spinner'; // Import Spinner
+import DashboardLayout from '../../layouts/DashboardLayout';
+import Spinner from '../../components/Spinner'; // Import Spinner
 import { FiSend, FiCalendar, FiEdit2, FiAlertCircle } from 'react-icons/fi';
 
 interface AbsenceFormData {

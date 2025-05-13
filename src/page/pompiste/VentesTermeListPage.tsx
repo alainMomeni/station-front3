@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import DashboardLayout from '../layouts/DashboardLayout';
+import DashboardLayout from '../../layouts/DashboardLayout';
 import { FiPlus, FiSearch, FiChevronDown, FiChevronLeft, FiChevronRight, FiEdit, FiEye, FiTrash2 } from 'react-icons/fi';
 
 interface VenteTerme {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import DashboardLayout from '../layouts/DashboardLayout';
+import DashboardLayout from '../../layouts/DashboardLayout';
 import { FiBell, FiTrash2, FiEye, FiCheckCircle, FiInfo, FiAlertTriangle as FiAlertTriangleIcon } from 'react-icons/fi'; // Renamed one FiAlertTriangle for clarity if needed elsewhere
 
 interface Notification {

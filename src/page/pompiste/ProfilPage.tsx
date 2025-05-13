@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import DashboardLayout from '../layouts/DashboardLayout';
+import DashboardLayout from '../../layouts/DashboardLayout';
 import { FiEdit3, FiSave, FiCamera } from 'react-icons/fi';
-import Spinner from '../components/Spinner';
+import Spinner from '../../components/Spinner';
 
 const ProfilPage: React.FC = () => {
   const [user, setUser] = useState({

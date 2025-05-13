@@ -1,5 +1,5 @@
 import React from 'react';
-import DashboardLayout from '../layouts/DashboardLayout';
+import DashboardLayout from '../../layouts/DashboardLayout';
 // Icons for this specific page content
 import { FiArrowUp, FiChevronLeft, FiChevronRight, FiCircle } from 'react-icons/fi';
 

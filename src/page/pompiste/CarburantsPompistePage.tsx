@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import DashboardLayout from '../layouts/DashboardLayout';
-import CuveCard from '../components/CuveCard';
-import Spinner from '../components/Spinner';
-import SaisieIndexModal from '../components/SaisieIndexModal'; // Import the modal
+import DashboardLayout from '../../layouts/DashboardLayout';
+import CuveCard from '../../components/CuveCard';
+import Spinner from '../../components/Spinner';
+import SaisieIndexModal from '../../components/SaisieIndexModal'; // Import the modal
 import { FiRefreshCw } from 'react-icons/fi';
 
 interface CuveData {

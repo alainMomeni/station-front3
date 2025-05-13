@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import DashboardLayout from '../layouts/DashboardLayout';
-import Spinner from '../components/Spinner'; // Import Spinner
+import DashboardLayout from '../../layouts/DashboardLayout';
+import Spinner from '../../components/Spinner'; // Import Spinner
 import { FiSend, FiTool, FiAlertCircle, FiMapPin, FiType } from 'react-icons/fi';
 
 interface DysfonctionnementFormData {

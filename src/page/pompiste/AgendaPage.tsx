@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isSameDay } from 'date-fns'; // Removed getDay, parseISO if not directly used for now
 import { fr } from 'date-fns/locale';
-import DashboardLayout from '../layouts/DashboardLayout';
+import DashboardLayout from '../../layouts/DashboardLayout';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 // ** Import the modal component **
-import ShiftDetailModal from '../components/ShiftDetailModal';
+import ShiftDetailModal from '../../components/ShiftDetailModal';
 
 // Define Shift type (or import if defined elsewhere)
 interface Shift {

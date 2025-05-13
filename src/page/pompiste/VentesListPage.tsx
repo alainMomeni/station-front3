@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom'; // Ajout de useNavigate pour l'édition
-import DashboardLayout from '../layouts/DashboardLayout';
+import DashboardLayout from '../../layouts/DashboardLayout';
 import { FiPlus, FiSearch, FiChevronLeft, FiChevronRight, FiEye, FiEdit, FiTrash2, FiChevronDown } from 'react-icons/fi'; // Ajout FiEdit, FiTrash2 et suppression FiPrinter
 
 // Interface VenteDirecte (ajustée si nécessaire)
