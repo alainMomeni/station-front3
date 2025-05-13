@@ -94,7 +94,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, toggleMobileSidebar }) 
             {/* Navigation */}
             <nav className="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
                  <p className="px-3 pb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    Menu ({userInfo.roleLabel})
+                    Menu 
                 </p>
                 {navigation.map((item) => {
                     const isCurrentParentActive = isParentActive(item);

@@ -4,186 +4,213 @@ import { Link } from 'react-router-dom';
 import DashboardLayout from '../../layouts/DashboardLayout'; // Ajuster chemin
 import { FiSearch, FiAlertTriangle, FiXCircle, FiCheckCircle, FiInfo } from 'react-icons/fi';
 
-// --- Données Mock pour le Stock Boutique ---
-// Dans une vraie application, ceci viendrait de Directus
-interface StockItemBoutique {
+// --- Interface Étendue pour le Stock Boutique avec Prix pour Valorisation ---
+interface StockItemBoutiqueValued {
     id: string;
     nom: string;
-    stockActuel: number;
-    seuilMinimum: number;
+    categorie?: string;
     unite: string;
-    categorie?: string; // Optionnel
+    stockOuverture: number;
+    ventesDuJour: number;
+    stockActuelReel: number; // Stock physique (résultat du dernier comptage/inventaire)
+    prixUnitaireVente: number; // Pour calculer la valeur du stock au prix de vente
+    seuilMinimum: number;
+    // Dérivés :
+    stockTheoriqueCloture?: number;
+    valeurTheoriqueCloture?: number; // Stock Théorique * Prix Vente
+    valeurActuelleReelle?: number;   // Stock Actuel Réel * Prix Vente
+    ecartValeurStock?: number;      // Différence entre les deux valeurs ci-dessus
+    statusStockPhysique?: StockStatus; // Basé sur stockActuelReel vs seuilMinimum
 }
 
-const dummyStockBoutique: StockItemBoutique[] = [
-    { id: 'boutique1', nom: 'Huile Moteur XYZ (1L)', stockActuel: 15, seuilMinimum: 10, unite: 'Unité', categorie: 'Lubrifiants' },
-    { id: 'boutique2', nom: 'Filtre à air ABC', stockActuel: 8, seuilMinimum: 5, unite: 'Unité', categorie: 'Pièces' },
-    { id: 'boutique3', nom: 'Boisson Gazeuse 33cl', stockActuel: 45, seuilMinimum: 24, unite: 'Unité', categorie: 'Boissons' },
-    { id: 'boutique4', nom: 'Essuie-glace TUV', stockActuel: 3, seuilMinimum: 5, unite: 'Paire', categorie: 'Accessoires' }, // Stock faible
-    { id: 'boutique5', nom: 'Lave-glace (5L)', stockActuel: 0, seuilMinimum: 2, unite: 'Bidon', categorie: 'Entretien' },   // Rupture
-    { id: 'boutique6', nom: 'Snack Chips Paprika', stockActuel: 18, seuilMinimum: 12, unite: 'Unité', categorie: 'Snacks' },
-    { id: 'boutique7', nom: 'Café Gobelet', stockActuel: 6, seuilMinimum: 10, unite: 'Unité', categorie: 'Boissons' }, // Stock faible
-    { id: 'boutique8', nom: 'Carte SIM Prépayée', stockActuel: 25, seuilMinimum: 5, unite: 'Unité', categorie: 'Services' },
+// --- Données Mock Étendues avec prix de vente (Complétées et avec des cas variés) ---
+const dummyStockBoutique: StockItemBoutiqueValued[] = [
+    { id: 'boutique1', nom: 'Huile Moteur Super H (1L)', stockOuverture: 20, ventesDuJour: 5, stockActuelReel: 15, prixUnitaireVente: 5500, seuilMinimum: 8, unite: 'Unité', categorie: 'Lubrifiants' },
+    { id: 'boutique2', nom: 'Filtre à Air ProClean', stockOuverture: 12, ventesDuJour: 4, stockActuelReel: 8, prixUnitaireVente: 7200, seuilMinimum: 5, unite: 'Unité', categorie: 'Pièces' },
+    { id: 'boutique3', nom: 'Soda Cola Pétillant 33cl', stockOuverture: 60, ventesDuJour: 15, stockActuelReel: 45, prixUnitaireVente: 500, seuilMinimum: 24, unite: 'Canette', categorie: 'Boissons' },
+    { id: 'boutique4', nom: 'Essuie-Glace VisionMax (Paire)', stockOuverture: 7, ventesDuJour: 4, stockActuelReel: 2, prixUnitaireVente: 12500, seuilMinimum: 5, unite: 'Paire', categorie: 'Accessoires' }, // Ecart de -1 en stock reel (-12500 XAF), et stock faible
+    { id: 'boutique5', nom: 'Lave-Glace ExpertClean (5L)', stockOuverture: 5, ventesDuJour: 5, stockActuelReel: 0, prixUnitaireVente: 3800, seuilMinimum: 2, unite: 'Bidon', categorie: 'Entretien' },   // Rupture et écart de valeur nul car théorique=0
+    { id: 'boutique6', nom: 'Chips CroustiSel BBQ', stockOuverture: 30, ventesDuJour: 12, stockActuelReel: 18, prixUnitaireVente: 750, seuilMinimum: 12, unite: 'Sachet', categorie: 'Snacks' }, // Au seuil, écart nul
+    { id: 'boutique7', nom: 'Café Intense (Gobelet)', stockOuverture: 20, ventesDuJour: 15, stockActuelReel: 6, prixUnitaireVente: 350, seuilMinimum: 10, unite: 'Unité', categorie: 'Boissons' }, // Ecart de valeur de +1*350=350 XAF, mais stock faible
+    { id: 'boutique8', nom: 'Carte SIM DataPass 5Go', stockOuverture: 25, ventesDuJour: 3, stockActuelReel: 22, prixUnitaireVente: 5000, seuilMinimum: 5, unite: 'Unité', categorie: 'Services' }, // Ecart nul
+    { id: 'boutique9', nom: 'Déodorant FraîcheurMax', stockOuverture: 10, ventesDuJour: 1, stockActuelReel: 10, prixUnitaireVente: 2500, seuilMinimum: 3, unite: 'Unité', categorie: 'Hygiène' }, // Ecart de valeur de +1*2500=2500 XAF (excédent)
+    { id: 'boutique10', nom: 'Chargeur Tél. Rapide USB-C', stockOuverture: 8, ventesDuJour: 0, stockActuelReel: 8, prixUnitaireVente: 6000, seuilMinimum: 3, unite: 'Unité', categorie: 'Accessoires Elec.' }, // Pas de ventes, pas d'écart
 ];
 // -----------------------------------------
 
-// Type pour le statut dérivé
-type StockStatus = 'En Stock' | 'Stock Faible' | 'Rupture';
+type StockStatus = 'OK' | 'Stock Faible' | 'Rupture';
 
-// Composant pour l'indicateur de statut visuel
+// Composant StatusIndicator
 const StatusIndicator: React.FC<{ status: StockStatus }> = ({ status }) => {
+    let classes = "inline-flex items-center px-2 py-0.5 rounded-full text-xxs font-medium ";
+    let icon = null;
+    let text = status;
+
     switch (status) {
-        case 'Stock Faible':
-            return (
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800" title="Le stock est inférieur ou égal au seuil minimum">
-                    <FiAlertTriangle className="mr-1 h-3 w-3" /> Faible
-                </span>
-            );
-        case 'Rupture':
-            return (
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800" title="Aucun article en stock">
-                    <FiXCircle className="mr-1 h-3 w-3" /> Rupture
-                </span>
-            );
-        case 'En Stock':
-        default:
-            return (
-                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800" title="Stock suffisant">
-                     <FiCheckCircle className="mr-1 h-3 w-3"/> OK
-                 </span>
-            );
+        case 'OK': classes += "bg-green-100 text-green-700"; icon = <FiCheckCircle className="mr-1 h-2.5 w-2.5"/>; text = "OK"; break;
+        case 'Stock Faible': classes += "bg-yellow-100 text-yellow-700"; icon = <FiAlertTriangle className="mr-1 h-2.5 w-2.5"/>; text = "Stock Faible"; break;
+        case 'Rupture': classes += "bg-red-100 text-red-700"; icon = <FiXCircle className="mr-1 h-2.5 w-2.5"/>; text = "Rupture"; break;
     }
+    return <span className={classes} title={`Statut du stock physique : ${status}`}>{icon}{text}</span>;
 };
 
+// Composant EcartValeurIndicator
+
+// Page principale
 const StockBoutiquePage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterStatus, setFilterStatus] = useState<'all' | StockStatus>('all');
+    const [filterEcartValeur, setFilterEcartValeur] = useState<'all' | 'avecEcartPositif' | 'avecEcartNegatif' | 'sansEcart'>('all');
 
-    // Calcul du statut et filtrage
-    const filteredStock = useMemo(() => {
-        return dummyStockBoutique
-            .map(item => {
-                let status: StockStatus;
-                if (item.stockActuel <= 0) {
-                    status = 'Rupture';
-                } else if (item.stockActuel <= item.seuilMinimum) {
-                    status = 'Stock Faible';
-                } else {
-                    status = 'En Stock';
-                }
-                return { ...item, status }; // Ajoute le statut calculé à l'objet
-            })
+    const formatXAF = (amount: number | undefined ) => {
+        if (amount === undefined) return '-';
+        return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XAF', minimumFractionDigits:0, maximumFractionDigits:0 }).format(amount);
+    }
+
+    const allProcessedStockWithValues = useMemo(() => {
+        return dummyStockBoutique.map(item => {
+            const stockTheoriqueCloture = item.stockOuverture - item.ventesDuJour;
+            const valeurTheoriqueCloture = stockTheoriqueCloture * item.prixUnitaireVente;
+            const valeurActuelleReelle = item.stockActuelReel * item.prixUnitaireVente;
+            const ecartValeurStock = valeurActuelleReelle - valeurTheoriqueCloture;
+            let statusStockPhysique: StockStatus;
+            if (item.stockActuelReel <= 0) statusStockPhysique = 'Rupture';
+            else if (item.stockActuelReel <= item.seuilMinimum) statusStockPhysique = 'Stock Faible';
+            else statusStockPhysique = 'OK';
+            return { ...item, stockTheoriqueCloture, valeurTheoriqueCloture, valeurActuelleReelle, ecartValeurStock, statusStockPhysique };
+        });
+    }, []);
+
+    const totals = useMemo(() => {
+        return allProcessedStockWithValues.reduce((acc, item) => {
+            acc.valeurTheoriqueCloture += item.valeurTheoriqueCloture || 0;
+            acc.valeurActuelleReelle += item.valeurActuelleReelle || 0;
+            acc.ecartValeurStock += item.ecartValeurStock || 0;
+            return acc;
+        }, { valeurTheoriqueCloture: 0, valeurActuelleReelle: 0, ecartValeurStock: 0 });
+    }, [allProcessedStockWithValues]);
+
+    const filteredAndSortedStock = useMemo(() => {
+        return allProcessedStockWithValues
             .filter(item => {
-                // Filtrage par nom/catégorie (simple)
                 const termLower = searchTerm.toLowerCase();
                 const nameMatch = item.nom.toLowerCase().includes(termLower);
                 const categoryMatch = item.categorie?.toLowerCase().includes(termLower) ?? false;
-                // Filtrage par statut
-                const statusMatch = filterStatus === 'all' || item.status === filterStatus;
-
-                return (nameMatch || categoryMatch) && statusMatch;
+                const statusMatch = filterStatus === 'all' || item.statusStockPhysique === filterStatus;
+                let ecartMatch = true;
+                if (filterEcartValeur === 'avecEcartPositif') ecartMatch = (item.ecartValeurStock || 0) > 0;
+                else if (filterEcartValeur === 'avecEcartNegatif') ecartMatch = (item.ecartValeurStock || 0) < 0;
+                else if (filterEcartValeur === 'sansEcart') ecartMatch = (item.ecartValeurStock || 0) === 0;
+                return (nameMatch || categoryMatch) && statusMatch && ecartMatch;
             })
-             // Optionnel: trier pour mettre Rupture et Faible en premier
-             .sort((a, b) => {
-                const statusOrder = { 'Rupture': 0, 'Stock Faible': 1, 'En Stock': 2 };
-                return statusOrder[a.status] - statusOrder[b.status];
+            .sort((a, b) => {
+                const statusOrder = { 'Rupture': 0, 'Stock Faible': 1, 'OK': 2 };
+                if (statusOrder[a.statusStockPhysique!] !== statusOrder[b.statusStockPhysique!]) {
+                    return statusOrder[a.statusStockPhysique!] - statusOrder[b.statusStockPhysique!];
+                }
+                return (a.ecartValeurStock || 0) - (b.ecartValeurStock || 0);
             });
-    }, [searchTerm, filterStatus]);
+    }, [allProcessedStockWithValues, searchTerm, filterStatus, filterEcartValeur]);
 
     return (
         <DashboardLayout>
-            {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-                <h1 className="text-2xl font-semibold text-gray-800 border-b-2 border-purple-600 inline-block pr-4 pb-1">
-                    État du Stock Boutique (Informatif)
+                <h1 className="text-xl md:text-2xl font-semibold text-gray-800 border-b-2 border-purple-600 inline-block pr-4 pb-1">
+                    Stock (Boutique)
                 </h1>
-                {/* Lien pour Signaler */}
-                 <Link
-                     to="/signalements/ecart-caisse" // Ou une route spécifique si besoin "/signalements/stock"
-                     className="inline-flex items-center px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded-md hover:bg-yellow-600 shadow-sm"
-                 >
+                 <Link to="/signalements/ecart-caisse"
+                     className="inline-flex items-center px-4 py-2 bg-orange-500 text-white text-sm font-medium rounded-md hover:bg-orange-600 shadow-sm">
                     <FiAlertTriangle className="-ml-1 mr-2 h-5 w-5" /> Signaler un Écart / Problème
                  </Link>
             </div>
 
-            {/* Carte Informative */}
              <div className="mb-6 p-4 rounded-md bg-blue-50 border border-blue-200 text-blue-800 flex items-start">
-                <FiInfo className="h-5 w-5 mr-3 mt-0.5 flex-shrink-0" />
+                 <FiInfo className="h-5 w-5 mr-3 mt-0.5 flex-shrink-0" />
                  <p className="text-sm">
-                    Cette vue affiche les niveaux de stock théoriques. Les quantités réelles peuvent varier. Utilisez le bouton ci-dessus pour signaler toute anomalie constatée (manquant, produit périmé, etc.). Aucune modification n'est possible depuis cette interface.
+                     Utilisez le bouton ci-dessus pour signaler les écarts financiers significatifs.
                 </p>
              </div>
 
-            {/* Card pour le contenu */}
-            <div className="bg-white p-6 rounded-lg shadow-md">
-                {/* Filtres */}
-                <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-3">
-                    <div className="relative w-full md:w-64">
-                         <FiSearch className="absolute h-4 w-4 text-gray-400 left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                         <input
-                            type="text"
-                            placeholder="Rechercher produit / catégorie..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="block w-full pl-9 pr-3 py-2 border border-gray-300 rounded-md bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
-                        />
+            <div className="bg-white p-4 md:p-6 rounded-lg shadow-md">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div className="relative">
+                        <FiSearch className="absolute h-4 w-4 text-gray-400 left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                        <input type="text" placeholder="Rechercher produit..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="block w-full pl-9 pr-3 py-2 border border-gray-300 rounded-md bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-purple-500 sm:text-sm" />
                     </div>
-                    <div className="w-full md:w-auto">
-                         <label htmlFor="statusFilter" className="sr-only">Filtrer par statut</label>
-                         <select
-                            id="statusFilter"
-                            value={filterStatus}
-                            onChange={(e) => setFilterStatus(e.target.value as 'all' | StockStatus)}
-                             className="appearance-none w-full md:w-auto block pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm rounded-md shadow-sm cursor-pointer"
-                         >
-                            <option value="all">Tous les Statuts</option>
-                            <option value="Stock Faible">Stock Faible Uniquement</option>
-                            <option value="Rupture">En Rupture Uniquement</option>
-                             <option value="En Stock">En Stock</option>
-                         </select>
+                    <div>
+                        <label htmlFor="statusFilter" className="sr-only">Filtrer par statut stock</label>
+                        <select id="statusFilter" value={filterStatus} onChange={(e) => setFilterStatus(e.target.value as any)} className="appearance-none w-full block pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm rounded-md shadow-sm cursor-pointer" >
+                            <option value="all">Tous les Statuts Stock</option>
+                            <option value="Stock Faible">Stock Faible</option>
+                            <option value="Rupture">En Rupture</option>
+                            <option value="OK">Stock OK</option>
+                        </select>
                     </div>
-                     {/* TODO: Bouton Refresh optionnel ici ? */}
+                    <div>
+                        <label htmlFor="ecartValeurFilter" className="sr-only">Filtrer par écart de valeur</label>
+                        <select id="ecartValeurFilter" value={filterEcartValeur} onChange={(e) => setFilterEcartValeur(e.target.value as any)}
+                             className="appearance-none w-full block pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm rounded-md shadow-sm cursor-pointer" >
+                            <option value="all">Tous les Écarts de Valeur</option>
+                            <option value="avecEcartPositif">Écart Positif (Excédent)</option>
+                            <option value="avecEcartNegatif">Écart Négatif (Manquant)</option>
+                            <option value="sansEcart">Sans Écart de Valeur</option>
+                        </select>
+                    </div>
                 </div>
 
-                 {/* Table des Stocks */}
                 <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
+                    <table className="min-w-full divide-y divide-gray-200 text-xs md:text-sm">
                         <thead className="bg-gray-50">
                             <tr>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produit</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Catégorie</th>
-                                <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Stock Actuel</th>
-                                <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Seuil Min.</th>
-                                <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                                <th className="px-3 py-3 text-left font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Produit</th>
+                                <th className="px-2 py-3 text-center font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap hidden sm:table-cell">Cat.</th>
+                                <th className="px-2 py-3 text-center font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Ouv. (Qté)</th>
+                                <th className="px-2 py-3 text-center font-medium text-red-600 uppercase tracking-wider whitespace-nowrap">Ventes (Qté)</th>
+                                <th className="px-2 py-3 text-center font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">StkThéo.Fin(Qté)</th>
+                                <th className="px-2 py-3 text-center font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Val.Théo.Ventes(XAF)</th>
+                                <th className="px-2 py-3 text-center font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Seuil Min(Qté)</th>
+                                <th className="px-2 py-3 text-center font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Statut Stock</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            {filteredStock.length > 0 ? (
-                                filteredStock.map((item) => (
-                                    <tr key={item.id} className={`${item.status === 'Rupture' ? 'bg-red-50' : item.status === 'Stock Faible' ? 'bg-yellow-50' : ''} hover:bg-gray-50`}>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.nom}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden sm:table-cell">{item.categorie || '-'}</td>
-                                        <td className={`px-6 py-4 whitespace-nowrap text-sm text-center font-semibold ${item.status !== 'En Stock' ? 'text-red-600' : 'text-gray-900'}`}>
-                                            {item.stockActuel} <span className='text-xs text-gray-500'>{item.unite}</span>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center hidden md:table-cell">{item.seuilMinimum}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-center text-sm">
-                                             <StatusIndicator status={item.status} />
+                            {filteredAndSortedStock.length > 0 ? (
+                                filteredAndSortedStock.map((item) => (
+                                    <tr key={item.id} className={`${
+                                        item.statusStockPhysique === 'Rupture' 
+                                            ? 'bg-red-50' 
+                                            : item.statusStockPhysique === 'Stock Faible' 
+                                                ? 'bg-yellow-50' 
+                                                : ''
+                                    } hover:bg-gray-100`}>
+                                        <td className="px-3 py-2 whitespace-nowrap font-medium text-gray-900">{item.nom} <span className='text-xxs text-gray-400'>({item.unite})</span></td>
+                                        <td className="px-2 py-2 whitespace-nowrap text-gray-500 text-center hidden sm:table-cell">{item.categorie || '-'}</td>
+                                        <td className="px-2 py-2 whitespace-nowrap text-gray-500 text-center">{item.stockOuverture}</td>
+                                        <td className="px-2 py-2 whitespace-nowrap text-red-500 text-center font-medium">{item.ventesDuJour > 0 ? `-${item.ventesDuJour}`: '-'}</td>
+                                        <td className="px-2 py-2 whitespace-nowrap text-gray-700 text-center font-semibold">{item.stockTheoriqueCloture}</td>
+                                        <td className="px-2 py-2 whitespace-nowrap text-gray-500 text-center">{formatXAF(item.valeurTheoriqueCloture)}</td>
+                                        <td className="px-2 py-2 whitespace-nowrap text-gray-500 text-center">{item.seuilMinimum}</td>
+                                        <td className="px-2 py-2 whitespace-nowrap text-center">
+                                             <StatusIndicator status={item.statusStockPhysique!} />
                                         </td>
                                     </tr>
                                 ))
                             ) : (
-                                <tr>
-                                    <td colSpan={5} className="text-center px-6 py-10 text-sm text-gray-500 italic">
-                                        Aucun produit trouvé correspondant aux filtres.
-                                    </td>
-                                </tr>
+                                <tr><td colSpan={8} className="text-center px-6 py-10 text-gray-500 italic">
+                                    Aucun produit ne correspond aux critères.
+                                </td></tr>
                             )}
                         </tbody>
+                        <tfoot className="bg-gray-100">
+                            <tr className="font-semibold text-gray-700">
+                                <td colSpan={5} className="px-3 py-3 text-right uppercase">Total Valeur :</td>
+                                <td className="px-2 py-3 text-center">{formatXAF(totals.valeurTheoriqueCloture)}</td>
+                                <td className="px-2 py-3 text-center"></td>
+                                <td className="px-2 py-3 text-center"></td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
-            </div> {/* Fin card contenu */}
-
+            </div>
         </DashboardLayout>
     );
 };

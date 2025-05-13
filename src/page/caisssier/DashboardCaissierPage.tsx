@@ -8,6 +8,7 @@ import {
     FiFileText, FiAlertCircle, FiCheckCircle,
     FiArchive
 } from 'react-icons/fi';
+import TopSellingChart from '../../components/charts/TopSellingChart';
 
 // Composant réutilisable pour les cartes de statistiques
 interface StatCardProps {
@@ -61,6 +62,15 @@ const DashboardCaissierPage: React.FC = () => {
     { id: 1, name: "Huile moteur", currentStock: 0, minStock: 10, unit: "L" },
     { id: 2, name: "Filtres à air", currentStock: 2, minStock: 5, unit: "pcs" },
     { id: 3, name: "Liquide de frein", currentStock: 1, minStock: 5, unit: "L" }
+  ];
+
+  // Mock data for top selling products
+  const topSellingProducts = [
+    { name: "Huile Moteur XYZ (1L)", quantity: 15 },
+    { name: "Boisson Gazeuse", quantity: 12 },
+    { name: "Filtre à air ABC", quantity: 8 },
+    { name: "Lave-glace (5L)", quantity: 6 },
+    { name: "Essuie-glace TUV", quantity: 4 }
   ];
 
   const formatXAF = (amount: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XAF', minimumFractionDigits: 0 }).format(amount);
@@ -138,11 +148,11 @@ const DashboardCaissierPage: React.FC = () => {
         <div className="bg-gray-50 p-6 rounded-lg shadow-md">
           <h2 className="text-lg font-semibold text-gray-700 mb-4">Actions Rapides Caisse</h2>
           <div className="space-y-3">
-            <Link to="/ventes/nouveau" className="block w-full text-left px-4 py-2.5 bg-green-500 text-white text-sm font-medium rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500 transition duration-150 ease-in-out">
+            <Link to="/caisse/ventes/nouveau" className="block w-full text-left px-4 py-2.5 bg-green-500 text-white text-sm font-medium rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500 transition duration-150 ease-in-out">
               <FiEdit className="inline mr-2 h-4 w-4" /> Enregistrer Vente Boutique
             </Link>
             {/* Si les ventes à terme sont AUSSI pour la boutique */}
-            <Link to="/ventes/terme/nouveau" className="block w-full text-left px-4 py-2.5 bg-blue-500 text-white text-sm font-medium rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500 transition duration-150 ease-in-out">
+            <Link to="/caisse/ventes/terme/nouveau" className="block w-full text-left px-4 py-2.5 bg-blue-500 text-white text-sm font-medium rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500 transition duration-150 ease-in-out">
                  <FiFileText className="inline mr-2 h-4 w-4"/> Nouvelle Vente à Terme (Boutique)
             </Link>
             {/* --- Fin Si --- */}
@@ -185,6 +195,18 @@ const DashboardCaissierPage: React.FC = () => {
             >
                 Voir Tout le Stock
             </Link>
+        </div>
+
+        {/* Carte: Top des Ventes Boutique */}
+        <div className="lg:col-span-2 bg-white p-4 rounded-lg shadow-md">
+            <h2 className="text-base md:text-lg font-semibold text-gray-700 mb-3 flex items-center">
+                <FiShoppingCart className="mr-2 h-4 w-4 md:h-5 md:w-5"/> 
+                Top des Ventes Boutique
+            </h2>
+            <TopSellingChart 
+                data={topSellingProducts}
+                title="Produits les plus vendus (Quart actuel)"
+            />
         </div>
 
       </div>

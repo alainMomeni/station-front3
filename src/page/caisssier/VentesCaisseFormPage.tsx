@@ -120,9 +120,8 @@ const VentesCaisseFormPage: React.FC = () => {
                 </div>
 
                 {/* Ligne Prix U / Remise / Total (identique) */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div><label htmlFor="prixUnitaire" className={labelClass}>Prix Unitaire (XAF)</label><input type="text" name="prixUnitaire" id="prixUnitaire" value={formData.prixUnitaire ? formatCurrency(parseFloat(formData.prixUnitaire)) : ''} className={readOnlyInputClass} readOnly /></div>
-                    <div><label htmlFor="remise" className={labelClass}>Remise (XAF)</label><input type="number" name="remise" id="remise" value={formData.remise} onChange={handleChange} placeholder="0" min="0" step="1" className={inputClass} /></div>
                     <div><label htmlFor="montantTotal" className={labelClass}>Total à Payer (XAF)</label><input type="text" name="montantTotal" id="montantTotal" value={formatCurrency(parseFloat(formData.montantTotal || '0'))} className={readOnlyInputClass + " font-semibold text-lg"} readOnly /></div>
                  </div>
 

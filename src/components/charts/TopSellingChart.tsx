@@ -1,16 +1,25 @@
 // src/components/charts/TopSellingChart.tsx
 import React from 'react';
+import { Bar } from 'react-chartjs-2';
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
   Tooltip,
-  Legend,
-  ResponsiveContainer,
-  Cell // Pour couleurs personnalisées si besoin
-} from 'recharts';
+  Legend
+} from 'chart.js';
+
+// Enregistrer les composants Chart.js nécessaires
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 export interface TopSellingProductData {
   name: string;
@@ -22,60 +31,108 @@ interface TopSellingChartProps {
   title?: string;
 }
 
-// Couleurs de base (vous pouvez les étendre ou les personnaliser)
-const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#00C49F', '#FFBB28', '#FF8042'];
-
 const TopSellingChart: React.FC<TopSellingChartProps> = ({ data, title }) => {
   if (!data || data.length === 0) {
     return (
       <div className="h-64 flex items-center justify-center text-gray-400 italic">
-        Pas de données de vente disponibles pour le graphique.
+        Pas de données de vente disponibles
       </div>
     );
   }
 
-  // Trier les données par quantité décroissante et prendre les X premiers (ex: top 5)
+  // Trier et limiter aux 5 premiers
   const sortedData = [...data]
     .sort((a, b) => b.quantity - a.quantity)
-    .slice(0, 5); // Affiche le top 5, ajuster si besoin
+    .slice(0, 5);
+
+  const chartData = {
+    labels: sortedData.map(item => item.name),
+    datasets: [
+      {
+        label: 'Quantité vendue',
+        data: sortedData.map(item => item.quantity),
+        backgroundColor: [
+          'rgba(147, 51, 234, 0.8)', // Purple
+          'rgba(168, 85, 247, 0.8)',
+          'rgba(192, 132, 252, 0.8)',
+          'rgba(216, 180, 254, 0.8)',
+          'rgba(233, 213, 255, 0.8)',
+        ],
+        borderColor: [
+          'rgb(147, 51, 234)', // Purple
+          'rgb(168, 85, 247)',
+          'rgb(192, 132, 252)',
+          'rgb(216, 180, 254)',
+          'rgb(233, 213, 255)',
+        ],
+        borderWidth: 1,
+        borderRadius: 6,
+    }]
+  };
+
+  const options = {
+    indexAxis: 'y' as const,
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      title: {
+        display: !!title,
+        text: title || '',
+        font: {
+          size: 14,
+          family: "'Inter', sans-serif",
+        },
+        color: '#4B5563', // text-gray-600
+        padding: 20
+      },
+      tooltip: {
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        titleColor: '#1F2937',
+        bodyColor: '#4B5563',
+        bodyFont: {
+          size: 13
+        },
+        borderColor: '#E5E7EB',
+        borderWidth: 1,
+        padding: 12,
+        displayColors: false,
+        callbacks: {
+          label: (context: any) => `Quantité: ${context.raw} unités`
+        }
+      }
+    },
+    scales: {
+      y: {
+        grid: {
+          display: false
+        },
+        ticks: {
+          font: {
+            size: 12,
+            family: "'Inter', sans-serif"
+          }
+        }
+      },
+      x: {
+        grid: {
+          color: '#E5E7EB'
+        },
+        ticks: {
+          font: {
+            size: 12,
+            family: "'Inter', sans-serif"
+          }
+        }
+      }
+    }
+  };
 
   return (
-    <div className="h-72 md:h-80 w-full"> {/* Hauteur ajustable */}
-      {title && <h3 className="text-md font-semibold text-gray-700 mb-3 text-center">{title}</h3>}
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart
-          layout="vertical" // Important pour barres horizontales
-          data={sortedData}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 70, // Laisser de la place pour les labels longs des produits
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-          <XAxis type="number" stroke="#9ca3af" /> {/* Axe des quantités */}
-          <YAxis
-            dataKey="name"
-            type="category"
-            stroke="#9ca3af"
-            width={100} // Ajuster la largeur pour les noms de produits
-            tick={{ fontSize: 10 }}
-             // Pourrait être nécessaire si les noms sont très longs :
-            // tickFormatter={(value) => value.length > 15 ? `${value.substring(0, 12)}...` : value}
-          />
-          <Tooltip
-            cursor={{ fill: 'rgba(206, 206, 206, 0.2)' }}
-            formatter={(value: number) => [`${value} Unités`, 'Quantité vendue']}
-          />
-          <Legend wrapperStyle={{ fontSize: '12px' }} />
-          <Bar dataKey="quantity" name="Quantité Vendue" fill="#8884d8" barSize={20}>
-            {sortedData.map((_entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+    <div className="h-[300px] w-full">
+      <Bar data={chartData} options={options} />
     </div>
   );
 };

@@ -1,20 +1,19 @@
 // src/routes/AppRoutes.tsx
 import React from 'react';
 import { Routes, Route, Navigate, Link } from 'react-router-dom';
-import DashboardLayout from '../layouts/DashboardLayout'; // Vérifiez/Adaptez le chemin
+import DashboardLayout from '../layouts/DashboardLayout'; // Ajustez le chemin
 
 // --- Importations des Pages ---
 
-// Communes / Login
+// Communes / Login / 404 gérée dans le JSX
 import LoginPage from '../page/login/LoginPage';
-import DashboardPage from '../page/pompiste/DashboardPage';
-import ProfilPage from '../page/pompiste/ProfilPage';
-import NotificationsPage from '../page/pompiste/NotificationsPage';
-import AgendaPage from '../page/pompiste/AgendaPage';
-import SignalerAbsencePage from '../page/pompiste/SignalerAbsencePage';
-// La 404 est gérée directement dans le JSX
+import ProfilPage from '../page/pompiste/ProfilPage'; // Ou un profil commun, ex: ../page/ProfilPage
+import NotificationsPage from '../page/pompiste/NotificationsPage'; // Ou commun
+import AgendaPage from '../page/pompiste/AgendaPage'; // Ou commun
+import SignalerAbsencePage from '../page/pompiste/SignalerAbsencePage'; // Ou commun
 
-// Pompiste (vérifiez les chemins réels si dans un dossier pompiste/)
+// Pompiste
+import DashboardPage from '../page/pompiste/DashboardPage';
 import VentesListPage from '../page/pompiste/VentesListPage';
 import VentesFormPage from '../page/pompiste/VentesFormPage';
 import VentesTermeListPage from '../page/pompiste/VentesTermeListPage';
@@ -22,65 +21,67 @@ import VentesTermeFormPage from '../page/pompiste/VentesTermeFormPage';
 import CarburantsPompistePage from '../page/pompiste/CarburantsPompistePage';
 import SignalerDysfonctionnementPage from '../page/pompiste/SignalerDysfonctionnementPage';
 
-// Caissier (vérifiez les chemins réels dans page/caissier/)
-import DashboardCaissierPage from '../page/caisssier/DashboardCaissierPage';
-import VentesCaisseListPage from '../page/caisssier/VentesCaisseListPage';
-import VentesCaisseFormPage from '../page/caisssier/VentesCaisseFormPage';
-import VentesTermeCaisseListPage from '../page/caisssier/VentesTermeCaisseListPage';
-import VentesTermeCaisseFormPage from '../page/caisssier/VentesTermeCaisseFormPage';
-import StockBoutiquePage from '../page/caisssier/StockBoutiquePage';
-import SignalementEcartPage from '../page/caisssier/SignalementEcartPage';
+// Caissier
+import DashboardCaissierPage from '../page/caisssier/DashboardCaissierPage'; // Attention, 3 's' dans 'caisssier' - Corriger si typo
+import VentesCaisseListPage from '../page/caisssier/VentesCaisseListPage'; // Idem
+import VentesCaisseFormPage from '../page/caisssier/VentesCaisseFormPage';   // Idem
+import VentesTermeCaisseListPage from '../page/caisssier/VentesTermeCaisseListPage'; // Idem
+import VentesTermeCaisseFormPage from '../page/caisssier/VentesTermeCaisseFormPage'; // Idem
+import StockBoutiquePage from '../page/caisssier/StockBoutiquePage';          // Idem
+import SignalementEcartPage from '../page/caisssier/SignalementEcartPage';        // Idem
+import SignalerDysfonctionnementCaissePage from '../page/caisssier/SignalerDysfonctionnementCaissePage'; // NOUVEAU, Idem pour typo
 
 
-// --- Configuration des Routes ---
-
+// --- Composant de Configuration des Routes ---
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
       {/* ----- Authentification et Racine ----- */}
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/" element={<Navigate replace to="/login" />} /> {/* Redirige vers login par défaut */}
+      <Route path="/" element={<Navigate replace to="/login" />} />
 
       {/* ----- Routes Principales (Post-Login) ----- */}
 
-      {/* Dashboards Spécifiques */}
-      <Route path="/dashboard" element={<DashboardPage />} />           {/* Défaut / Pompiste */}
-      <Route path="/dashboard-caissier" element={<DashboardCaissierPage />} /> {/* Caissier */}
+      {/* Dashboards */}
+      <Route path="/dashboard" element={<DashboardPage />} /> {/* Défaut / Pompiste */}
+      <Route path="/dashboard-caissier" element={<DashboardCaissierPage />} />
 
-      {/* Routes Accessibles aux Deux Rôles (potentiellement) */}
+      {/* Communes (Si vos pages Profil, Notifications, Agenda, Absence sont bien dans /pompiste/ et non /page/ ) */}
       <Route path="/profil" element={<ProfilPage />} />
       <Route path="/notifications" element={<NotificationsPage />} />
       <Route path="/agenda" element={<AgendaPage />} />
       <Route path="/signalements/absence" element={<SignalerAbsencePage />} />
 
+
       {/* --- Routes Spécifiques Pompiste --- */}
-      {/* Section Ventes Carburant */}
+      {/* Ventes Carburant */}
       <Route path="/ventes" element={<Navigate replace to="/ventes/directes" />} />
       <Route path="/ventes/directes" element={<VentesListPage />} />
       <Route path="/ventes/nouveau" element={<VentesFormPage />} />
       <Route path="/ventes/terme" element={<VentesTermeListPage />} />
       <Route path="/ventes/terme/nouveau" element={<VentesTermeFormPage />} />
-      {/* Ajouter '/ventes/modifier/:id', '/ventes/details/:id' si nécessaire */}
       {/* Gestion Cuves */}
       <Route path="/carburants" element={<CarburantsPompistePage />} />
-      {/* Signalement Matériel */}
+      {/* Signalement Dysfonctionnement (Piste/Équipement) */}
       <Route path="/signalements/dysfonctionnement" element={<SignalerDysfonctionnementPage />} />
 
+
       {/* --- Routes Spécifiques Caissier --- */}
-      {/* Section Ventes Boutique */}
+      {/* Ventes Boutique */}
       <Route path="/caisse/ventes" element={<Navigate replace to="/caisse/ventes/directes" />} />
       <Route path="/caisse/ventes/directes" element={<VentesCaisseListPage />} />
       <Route path="/caisse/ventes/nouveau" element={<VentesCaisseFormPage />} />
       <Route path="/caisse/ventes/terme" element={<VentesTermeCaisseListPage />} />
       <Route path="/caisse/ventes/terme/nouveau" element={<VentesTermeCaisseFormPage />} />
-       {/* Ajouter '/caisse/ventes/modifier/:id', '/caisse/ventes/details/:id' si nécessaire */}
       {/* Stock Boutique */}
       <Route path="/caisse/stock" element={<StockBoutiquePage />} />
-      {/* Signalement Écart Caisse */}
+      {/* Signalements Caisse */}
       <Route path="/signalements/ecart-caisse" element={<SignalementEcartPage />} />
+      {/* NOUVELLE ROUTE : Dysfonctionnement Caisse */}
+      <Route path="/caisse/signalements/dysfonctionnement" element={<SignalerDysfonctionnementCaissePage />} />
 
 
-      {/* ----- Page Non Trouvée (404) - Doit être la dernière ----- */}
+      {/* ----- Page Non Trouvée (404) - Toujours à la fin ----- */}
       <Route
         path="*"
         element={
@@ -94,7 +95,7 @@ const AppRoutes: React.FC = () => {
                 La page que vous recherchez n'existe pas ou a été déplacée.
               </p>
               <Link
-                to="/dashboard" // Retour générique
+                to="/dashboard"
                 className="mt-8 inline-block px-6 py-3 bg-purple-600 text-white text-sm font-semibold rounded-md hover:bg-purple-700 transition-colors"
               >
                 Retour au Dashboard
