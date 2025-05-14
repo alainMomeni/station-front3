@@ -15,6 +15,9 @@ interface StockItemBoutiqueValued {
     stockActuelReel: number; // Stock physique (résultat du dernier comptage/inventaire)
     prixUnitaireVente: number; // Pour calculer la valeur du stock au prix de vente
     seuilMinimum: number;
+    ventesEspeces: number;
+    ventesCarteBancaire: number;
+    ventesMobileMoney: number;
     // Dérivés :
     stockTheoriqueCloture?: number;
     valeurTheoriqueCloture?: number; // Stock Théorique * Prix Vente
@@ -25,16 +28,146 @@ interface StockItemBoutiqueValued {
 
 // --- Données Mock Étendues avec prix de vente (Complétées et avec des cas variés) ---
 const dummyStockBoutique: StockItemBoutiqueValued[] = [
-    { id: 'boutique1', nom: 'Huile Moteur Super H (1L)', stockOuverture: 20, ventesDuJour: 5, stockActuelReel: 15, prixUnitaireVente: 5500, seuilMinimum: 8, unite: 'Unité', categorie: 'Lubrifiants' },
-    { id: 'boutique2', nom: 'Filtre à Air ProClean', stockOuverture: 12, ventesDuJour: 4, stockActuelReel: 8, prixUnitaireVente: 7200, seuilMinimum: 5, unite: 'Unité', categorie: 'Pièces' },
-    { id: 'boutique3', nom: 'Soda Cola Pétillant 33cl', stockOuverture: 60, ventesDuJour: 15, stockActuelReel: 45, prixUnitaireVente: 500, seuilMinimum: 24, unite: 'Canette', categorie: 'Boissons' },
-    { id: 'boutique4', nom: 'Essuie-Glace VisionMax (Paire)', stockOuverture: 7, ventesDuJour: 4, stockActuelReel: 2, prixUnitaireVente: 12500, seuilMinimum: 5, unite: 'Paire', categorie: 'Accessoires' }, // Ecart de -1 en stock reel (-12500 XAF), et stock faible
-    { id: 'boutique5', nom: 'Lave-Glace ExpertClean (5L)', stockOuverture: 5, ventesDuJour: 5, stockActuelReel: 0, prixUnitaireVente: 3800, seuilMinimum: 2, unite: 'Bidon', categorie: 'Entretien' },   // Rupture et écart de valeur nul car théorique=0
-    { id: 'boutique6', nom: 'Chips CroustiSel BBQ', stockOuverture: 30, ventesDuJour: 12, stockActuelReel: 18, prixUnitaireVente: 750, seuilMinimum: 12, unite: 'Sachet', categorie: 'Snacks' }, // Au seuil, écart nul
-    { id: 'boutique7', nom: 'Café Intense (Gobelet)', stockOuverture: 20, ventesDuJour: 15, stockActuelReel: 6, prixUnitaireVente: 350, seuilMinimum: 10, unite: 'Unité', categorie: 'Boissons' }, // Ecart de valeur de +1*350=350 XAF, mais stock faible
-    { id: 'boutique8', nom: 'Carte SIM DataPass 5Go', stockOuverture: 25, ventesDuJour: 3, stockActuelReel: 22, prixUnitaireVente: 5000, seuilMinimum: 5, unite: 'Unité', categorie: 'Services' }, // Ecart nul
-    { id: 'boutique9', nom: 'Déodorant FraîcheurMax', stockOuverture: 10, ventesDuJour: 1, stockActuelReel: 10, prixUnitaireVente: 2500, seuilMinimum: 3, unite: 'Unité', categorie: 'Hygiène' }, // Ecart de valeur de +1*2500=2500 XAF (excédent)
-    { id: 'boutique10', nom: 'Chargeur Tél. Rapide USB-C', stockOuverture: 8, ventesDuJour: 0, stockActuelReel: 8, prixUnitaireVente: 6000, seuilMinimum: 3, unite: 'Unité', categorie: 'Accessoires Elec.' }, // Pas de ventes, pas d'écart
+    { 
+        id: 'boutique1', 
+        nom: 'Huile Moteur Super H (1L)', 
+        stockOuverture: 20, 
+        ventesDuJour: 5, 
+        stockActuelReel: 15, 
+        prixUnitaireVente: 5500, 
+        seuilMinimum: 8, 
+        unite: 'Unité', 
+        categorie: 'Lubrifiants',
+        ventesEspeces: 3500,
+        ventesCarteBancaire: 1500,
+        ventesMobileMoney: 500
+    },
+    { 
+        id: 'boutique2', 
+        nom: 'Filtre à Air ProClean', 
+        stockOuverture: 12, 
+        ventesDuJour: 4, 
+        stockActuelReel: 8, 
+        prixUnitaireVente: 7200, 
+        seuilMinimum: 5, 
+        unite: 'Unité', 
+        categorie: 'Pièces',
+        ventesEspeces: 5000,
+        ventesCarteBancaire: 1200,
+        ventesMobileMoney: 0
+    },
+    { 
+        id: 'boutique3', 
+        nom: 'Soda Cola Pétillant 33cl', 
+        stockOuverture: 60, 
+        ventesDuJour: 15, 
+        stockActuelReel: 45, 
+        prixUnitaireVente: 500, 
+        seuilMinimum: 24, 
+        unite: 'Canette', 
+        categorie: 'Boissons',
+        ventesEspeces: 7500,
+        ventesCarteBancaire: 0,
+        ventesMobileMoney: 0
+    },
+    { 
+        id: 'boutique4', 
+        nom: 'Essuie-Glace VisionMax (Paire)', 
+        stockOuverture: 7, 
+        ventesDuJour: 4, 
+        stockActuelReel: 2, 
+        prixUnitaireVente: 12500, 
+        seuilMinimum: 5, 
+        unite: 'Paire', 
+        categorie: 'Accessoires',
+        ventesEspeces: 50000,
+        ventesCarteBancaire: 0,
+        ventesMobileMoney: 0
+    },
+    { 
+        id: 'boutique5', 
+        nom: 'Lave-Glace ExpertClean (5L)', 
+        stockOuverture: 5, 
+        ventesDuJour: 5, 
+        stockActuelReel: 0, 
+        prixUnitaireVente: 3800, 
+        seuilMinimum: 2, 
+        unite: 'Bidon', 
+        categorie: 'Entretien',
+        ventesEspeces: 19000,
+        ventesCarteBancaire: 0,
+        ventesMobileMoney: 0
+    },
+    { 
+        id: 'boutique6', 
+        nom: 'Chips CroustiSel BBQ', 
+        stockOuverture: 30, 
+        ventesDuJour: 12, 
+        stockActuelReel: 18, 
+        prixUnitaireVente: 750, 
+        seuilMinimum: 12, 
+        unite: 'Sachet', 
+        categorie: 'Snacks',
+        ventesEspeces: 9000,
+        ventesCarteBancaire: 0,
+        ventesMobileMoney: 0
+    },
+    { 
+        id: 'boutique7', 
+        nom: 'Café Intense (Gobelet)', 
+        stockOuverture: 20, 
+        ventesDuJour: 15, 
+        stockActuelReel: 6, 
+        prixUnitaireVente: 350, 
+        seuilMinimum: 10, 
+        unite: 'Unité', 
+        categorie: 'Boissons',
+        ventesEspeces: 5250,
+        ventesCarteBancaire: 0,
+        ventesMobileMoney: 0
+    },
+    { 
+        id: 'boutique8', 
+        nom: 'Carte SIM DataPass 5Go', 
+        stockOuverture: 25, 
+        ventesDuJour: 3, 
+        stockActuelReel: 22, 
+        prixUnitaireVente: 5000, 
+        seuilMinimum: 5, 
+        unite: 'Unité', 
+        categorie: 'Services',
+        ventesEspeces: 15000,
+        ventesCarteBancaire: 0,
+        ventesMobileMoney: 0
+    },
+    { 
+        id: 'boutique9', 
+        nom: 'Déodorant FraîcheurMax', 
+        stockOuverture: 10, 
+        ventesDuJour: 1, 
+        stockActuelReel: 10, 
+        prixUnitaireVente: 2500, 
+        seuilMinimum: 3, 
+        unite: 'Unité', 
+        categorie: 'Hygiène',
+        ventesEspeces: 2500,
+        ventesCarteBancaire: 0,
+        ventesMobileMoney: 0
+    },
+    { 
+        id: 'boutique10', 
+        nom: 'Chargeur Tél. Rapide USB-C', 
+        stockOuverture: 8, 
+        ventesDuJour: 0, 
+        stockActuelReel: 8, 
+        prixUnitaireVente: 6000, 
+        seuilMinimum: 3, 
+        unite: 'Unité', 
+        categorie: 'Accessoires Elec.',
+        ventesEspeces: 0,
+        ventesCarteBancaire: 0,
+        ventesMobileMoney: 0
+    },
 ];
 // -----------------------------------------
 
@@ -60,7 +193,7 @@ const StatusIndicator: React.FC<{ status: StockStatus }> = ({ status }) => {
 const StockBoutiquePage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterStatus, setFilterStatus] = useState<'all' | StockStatus>('all');
-    const [filterEcartValeur, setFilterEcartValeur] = useState<'all' | 'avecEcartPositif' | 'avecEcartNegatif' | 'sansEcart'>('all');
+    const [filterEcartValeur] = useState<'all' | 'avecEcartPositif' | 'avecEcartNegatif' | 'sansEcart'>('all');
 
     const formatXAF = (amount: number | undefined ) => {
         if (amount === undefined) return '-';
@@ -84,10 +217,16 @@ const StockBoutiquePage: React.FC = () => {
     const totals = useMemo(() => {
         return allProcessedStockWithValues.reduce((acc, item) => {
             acc.valeurTheoriqueCloture += item.valeurTheoriqueCloture || 0;
-            acc.valeurActuelleReelle += item.valeurActuelleReelle || 0;
-            acc.ecartValeurStock += item.ecartValeurStock || 0;
+            acc.totalEspeces += item.ventesEspeces || 0;
+            acc.totalCarte += item.ventesCarteBancaire || 0;
+            acc.totalMobile += item.ventesMobileMoney || 0;
             return acc;
-        }, { valeurTheoriqueCloture: 0, valeurActuelleReelle: 0, ecartValeurStock: 0 });
+        }, { 
+            valeurTheoriqueCloture: 0,
+            totalEspeces: 0,
+            totalCarte: 0,
+            totalMobile: 0
+        });
     }, [allProcessedStockWithValues]);
 
     const filteredAndSortedStock = useMemo(() => {
@@ -146,16 +285,6 @@ const StockBoutiquePage: React.FC = () => {
                             <option value="OK">Stock OK</option>
                         </select>
                     </div>
-                    <div>
-                        <label htmlFor="ecartValeurFilter" className="sr-only">Filtrer par écart de valeur</label>
-                        <select id="ecartValeurFilter" value={filterEcartValeur} onChange={(e) => setFilterEcartValeur(e.target.value as any)}
-                             className="appearance-none w-full block pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm rounded-md shadow-sm cursor-pointer" >
-                            <option value="all">Tous les Écarts de Valeur</option>
-                            <option value="avecEcartPositif">Écart Positif (Excédent)</option>
-                            <option value="avecEcartNegatif">Écart Négatif (Manquant)</option>
-                            <option value="sansEcart">Sans Écart de Valeur</option>
-                        </select>
-                    </div>
                 </div>
 
                 <div className="overflow-x-auto">
@@ -168,6 +297,9 @@ const StockBoutiquePage: React.FC = () => {
                                 <th className="px-2 py-3 text-center font-medium text-red-600 uppercase tracking-wider whitespace-nowrap">Ventes (Qté)</th>
                                 <th className="px-2 py-3 text-center font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">StkThéo.Fin(Qté)</th>
                                 <th className="px-2 py-3 text-center font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Val.Théo.Ventes(XAF)</th>
+                                <th className="px-2 py-3 text-center font-medium text-green-600 uppercase tracking-wider whitespace-nowrap">Espèces(XAF)</th>
+                                <th className="px-2 py-3 text-center font-medium text-blue-600 uppercase tracking-wider whitespace-nowrap">Carte(XAF)</th>
+                                <th className="px-2 py-3 text-center font-medium text-orange-600 uppercase tracking-wider whitespace-nowrap">Mobile(XAF)</th>
                                 <th className="px-2 py-3 text-center font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Seuil Min(Qté)</th>
                                 <th className="px-2 py-3 text-center font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Statut Stock</th>
                             </tr>
@@ -188,6 +320,9 @@ const StockBoutiquePage: React.FC = () => {
                                         <td className="px-2 py-2 whitespace-nowrap text-red-500 text-center font-medium">{item.ventesDuJour > 0 ? `-${item.ventesDuJour}`: '-'}</td>
                                         <td className="px-2 py-2 whitespace-nowrap text-gray-700 text-center font-semibold">{item.stockTheoriqueCloture}</td>
                                         <td className="px-2 py-2 whitespace-nowrap text-gray-500 text-center">{formatXAF(item.valeurTheoriqueCloture)}</td>
+                                        <td className="px-2 py-2 whitespace-nowrap text-green-600 text-center font-medium">{formatXAF(item.ventesEspeces)}</td>
+                                        <td className="px-2 py-2 whitespace-nowrap text-blue-600 text-center font-medium">{formatXAF(item.ventesCarteBancaire)}</td>
+                                        <td className="px-2 py-2 whitespace-nowrap text-orange-600 text-center font-medium">{formatXAF(item.ventesMobileMoney)}</td>
                                         <td className="px-2 py-2 whitespace-nowrap text-gray-500 text-center">{item.seuilMinimum}</td>
                                         <td className="px-2 py-2 whitespace-nowrap text-center">
                                              <StatusIndicator status={item.statusStockPhysique!} />
@@ -195,7 +330,7 @@ const StockBoutiquePage: React.FC = () => {
                                     </tr>
                                 ))
                             ) : (
-                                <tr><td colSpan={8} className="text-center px-6 py-10 text-gray-500 italic">
+                                <tr><td colSpan={11} className="text-center px-6 py-10 text-gray-500 italic">
                                     Aucun produit ne correspond aux critères.
                                 </td></tr>
                             )}
@@ -204,6 +339,9 @@ const StockBoutiquePage: React.FC = () => {
                             <tr className="font-semibold text-gray-700">
                                 <td colSpan={5} className="px-3 py-3 text-right uppercase">Total Valeur :</td>
                                 <td className="px-2 py-3 text-center">{formatXAF(totals.valeurTheoriqueCloture)}</td>
+                                <td className="px-2 py-3 text-center text-green-600">{formatXAF(totals.totalEspeces)}</td>
+                                <td className="px-2 py-3 text-center text-blue-600">{formatXAF(totals.totalCarte)}</td>
+                                <td className="px-2 py-3 text-center text-orange-600">{formatXAF(totals.totalMobile)}</td>
                                 <td className="px-2 py-3 text-center"></td>
                                 <td className="px-2 py-3 text-center"></td>
                             </tr>
