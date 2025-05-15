@@ -9,7 +9,7 @@ import type { NavItem, RoleType } from '../config/menuConfig';
 
 // --- !! CONSTANTE POUR SIMULER LE RÔLE CONNECTÉ !! ---
 // --- !! MODIFIEZ CETTE VALEUR ('pompiste' ou 'caissier') POUR TESTER !! ---
-const SIMULATED_ROLE: RoleType = 'caissier';
+const SIMULATED_ROLE: RoleType = 'pompiste';
 // --- !! -------------------------------------------------- !! ---
 
 

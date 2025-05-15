@@ -6,7 +6,8 @@ import DashboardLayout from '../../layouts/DashboardLayout';
 import {
     FiClock, FiDollarSign, FiShoppingCart, FiCreditCard, FiSmartphone, FiEdit, // Remplacement de FiDroplet par FiShoppingCart
     FiFileText, FiAlertCircle, FiCheckCircle,
-    FiArchive
+    FiArchive,
+    FiList
 } from 'react-icons/fi';
 import TopSellingChart from '../../components/charts/TopSellingChart';
 
@@ -146,7 +147,7 @@ const DashboardCaissierPage: React.FC = () => {
         {/* On suppose que 'Vente Directe' est le mécanisme pour enregistrer une vente boutique */}
         {/* On suppose que 'Vente à terme' PEUT s'appliquer à la boutique */}
         <div className="bg-gray-50 p-6 rounded-lg shadow-md">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">Actions Rapides Caisse</h2>
+          <h2 className="text-lg font-semibold text-gray-700 mb-4"> <FiList className="mr-2 h-5 w-5" /> Actions Rapides Caisse</h2>
           <div className="space-y-3">
             <Link to="/caisse/ventes/nouveau" className="block w-full text-left px-4 py-2.5 bg-green-500 text-white text-sm font-medium rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500 transition duration-150 ease-in-out">
               <FiEdit className="inline mr-2 h-4 w-4" /> Enregistrer Vente Boutique

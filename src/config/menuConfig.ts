@@ -3,7 +3,8 @@ import React from 'react';
 import {
     FiGrid, FiShoppingCart, FiDroplet, FiCalendar, FiAlertTriangle,
     FiUserX, FiTool, FiDollarSign, FiPackage, FiSliders, FiArchive, // FiArchive ajouté pour l'historique
-    FiBarChart2 // Quelques icônes supplémentaires pour illustrer
+    FiBarChart2, // Quelques icônes supplémentaires pour illustrer
+    FiLayers
 } from 'react-icons/fi';
 
 // --- Interfaces pour les éléments de navigation ---
@@ -28,17 +29,19 @@ export type RoleType = 'pompiste' | 'caissier';
 
 // Menu pour le rôle 'pompiste'
 const pompisteMenu: NavItem[] = [
-    { name: 'Dashboard Pompiste', href: '/dashboard', icon: FiGrid }, // Renommé pour clarté si différent du caissier
+    { name: 'Tableau de Bord', href: '/dashboard', icon: FiGrid },
     {
         name: 'Ventes Carburant',
-        icon: FiDroplet,
+        icon: FiDroplet, // Maintenu FiDroplet car spécifique au carburant
         subItems: [
             { name: 'Ventes Directes', href: '/ventes/directes', icon: FiShoppingCart },
             { name: 'Ventes à Terme', href: '/ventes/terme', icon: FiDollarSign },
         ]
     },
-    { name: 'Gestion Cuves', href: '/carburants', icon: FiDroplet },
+    { name: 'Gestion Cuves', href: '/carburants', icon: FiLayers }, // Changé pour FiLayers pour cuves/stock
     { name: 'Mon Planning', href: '/agenda', icon: FiCalendar },
+    // Nouvelle ligne pour l'historique des quarts
+    { name: 'Historique Quarts', href: '/historique-quarts', icon: FiBarChart2 },
     {
         name: 'Mes Signalements',
         icon: FiAlertTriangle,
