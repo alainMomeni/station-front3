@@ -1,10 +1,10 @@
 // src/config/menuConfig.ts
 import React from 'react';
 import {
-    FiGrid, FiShoppingCart, FiDroplet, FiCalendar, FiAlertTriangle,
-    FiUserX, FiTool, FiDollarSign, FiPackage, FiSliders, FiArchive, // FiArchive ajouté pour l'historique
-    FiBarChart2, // Quelques icônes supplémentaires pour illustrer
-    FiLayers
+    FiGrid, FiShoppingCart, FiDroplet, FiCalendar, FiAlertTriangle, FiUserX,
+    FiTool, FiDollarSign, FiPackage, FiSliders, FiArchive, FiBarChart2, FiLayers,
+    FiUsers, FiUserCheck, FiDatabase, FiList, FiAlertOctagon, FiSettings, FiBriefcase,
+    FiTrendingUp, FiCreditCard, FiFileText, FiMessageSquare, FiShield, FiClipboard, FiBell, FiUser // Ajout de FiBell et FiUser
 } from 'react-icons/fi';
 
 // --- Interfaces pour les éléments de navigation ---
@@ -22,25 +22,21 @@ export interface NavItem {
 }
 
 // --- Définition des Rôles ---
-// Si vous avez plus de rôles, ajoutez-les ici (ex: 'admin', 'manager')
-export type RoleType = 'pompiste' | 'caissier';
+export type RoleType = 'pompiste' | 'caissier' | 'chef_de_piste' | 'gerant'; // Ajout du Gérant
 
-// --- Définition des Menus par Rôle ---
-
-// Menu pour le rôle 'pompiste'
+// --- Menu pour le rôle 'pompiste' ---
 const pompisteMenu: NavItem[] = [
     { name: 'Tableau de Bord', href: '/dashboard', icon: FiGrid },
     {
         name: 'Ventes Carburant',
-        icon: FiDroplet, // Maintenu FiDroplet car spécifique au carburant
+        icon: FiDroplet,
         subItems: [
             { name: 'Ventes Directes', href: '/ventes/directes', icon: FiShoppingCart },
             { name: 'Ventes à Terme', href: '/ventes/terme', icon: FiDollarSign },
         ]
     },
-    { name: 'Gestion Cuves', href: '/carburants', icon: FiLayers }, // Changé pour FiLayers pour cuves/stock
+    { name: 'Gestion Cuves', href: '/carburants', icon: FiLayers },
     { name: 'Mon Planning', href: '/agenda', icon: FiCalendar },
-    // Nouvelle ligne pour l'historique des quarts
     { name: 'Historique Quarts', href: '/historique-quarts', icon: FiBarChart2 },
     {
         name: 'Mes Signalements',
@@ -52,7 +48,7 @@ const pompisteMenu: NavItem[] = [
     },
 ];
 
-// Menu pour le rôle 'caissier'
+// --- Menu pour le rôle 'caissier' ---
 const caissierMenu: NavItem[] = [
     { name: 'Dashboard Caisse', href: '/dashboard-caissier', icon: FiGrid },
     {
@@ -65,29 +61,126 @@ const caissierMenu: NavItem[] = [
     },
     { name: 'Stock Boutique', href: '/caisse/stock', icon: FiPackage },
     { name: 'Historique Clôtures', href: '/caisse/historique/clotures', icon: FiBarChart2 },
-    { name: 'Mon Planning', href: '/agenda', icon: FiCalendar },
+    { name: 'Mon Planning', href: '/agenda', icon: FiCalendar }, // Partagé
     {
         name: 'Signalements Caisse',
         icon: FiAlertTriangle,
         subItems: [
-            { name: 'Mon Absence', href: '/signalements/absence', icon: FiUserX }, // Route commune
+            { name: 'Mon Absence', href: '/signalements/absence', icon: FiUserX }, // Partagé
             { name: 'Écart Caisse', href: '/signalements/ecart-caisse', icon: FiDollarSign },
             { name: 'Dysfonctionnement', href: '/caisse/signalements/dysfonctionnement', icon: FiSliders },
         ]
     },
 ];
 
+// --- Menu pour le Chef de Piste ---
+const chefDePisteMenu: NavItem[] = [
+    { name: 'Dashboard Chef de Piste', href: '/dashboard-chef-de-piste', icon: FiGrid },
+    {
+        name: 'Gestion des Quarts',
+        icon: FiCalendar,
+        subItems: [
+            { name: 'Saisie Index Cuves', href: '/chef-de-piste/saisie-index', icon: FiDatabase },
+            { name: 'Affectation Personnel', href: '/chef-de-piste/affectations', icon: FiUsers },
+            { name: 'Suivi Présences', href: '/chef-de-piste/presences', icon: FiUserCheck },
+            { name: 'Saisie Caisse Physique', href: '/chef-de-piste/saisie-caisse', icon: FiDollarSign },
+        ]
+    },
+    {
+        name: 'Signalements & Suivi',
+        icon: FiAlertTriangle,
+        subItems: [
+            { name: 'Signaler Écarts (Index/Caisse)', href: '/chef-de-piste/signalements/ecarts', icon: FiAlertOctagon },
+            { name: 'Signaler Problème Matériel', href: '/chef-de-piste/signalements/materiel', icon: FiTool },
+            { name: 'Signaler Mon Absence', href: '/signalements/absence', icon: FiUserX },
+        ]
+    },
+    {
+        name: 'Rapports & Historique',
+        icon: FiArchive,
+        subItems: [
+            { name: 'Historique Index & Volumes', href: '/chef-de-piste/historique/index', icon: FiList },
+            { name: 'Rapports de Quarts (Global)', href: '/chef-de-piste/rapports/quarts', icon: FiBarChart2 },
+        ]
+    },
+    { name: 'Mon Planning', href: '/agenda', icon: FiCalendar },
+    { name: 'Notifications', href: '/notifications', icon: FiBell },
+    { name: 'Mon Profil', href: '/profil', icon: FiUser },
+];
+
+// --- NOUVEAU: Menu pour le Gérant ---
+const gerantMenu: NavItem[] = [
+    { name: 'Tableau de Bord', href: '/gerant/dashboard', icon: FiGrid },
+    {
+        name: 'Approvisionnement',
+        icon: FiPackage,
+        subItems: [
+            { name: 'Niveaux Cuves', href: '/gerant/stocks/cuves', icon: FiDroplet },
+            { name: 'Stocks Boutique', href: '/gerant/stocks/produits', icon: FiArchive },
+            { name: 'Bons de Commande', href: '/gerant/commandes/nouveau', icon: FiFileText },
+            { name: 'Suivi Livraisons', href: '/gerant/livraisons/suivi', icon: FiClipboard },
+            { name: 'Catalogue Produits', href: '/gerant/catalogue/gestion', icon: FiList },
+        ]
+    },
+    {
+        name: 'Suivi des Ventes',
+        icon: FiTrendingUp,
+        subItems: [
+            { name: 'Ventes par Employé', href: '/gerant/ventes/personnel', icon: FiUsers },
+            { name: 'Ventes à Crédit', href: '/gerant/ventes/credit', icon: FiCreditCard },
+            { name: 'Rapports d\'Activité', href: '/gerant/rapports/activite', icon: FiBarChart2 },
+        ]
+    },
+    {
+        name: 'Analyse Financière',
+        icon: FiDollarSign,
+        subItems: [
+            { name: 'Marges', href: '/gerant/finance/marges', icon: FiSliders },
+            { name: 'Gestion des Dépenses', href: '/gerant/finance/depenses', icon: FiBriefcase },
+            { name: 'Facturation Clients', href: '/gerant/finance/facturation', icon: FiFileText },
+        ]
+    },
+    {
+        name: 'Personnel',
+        icon: FiUsers,
+        subItems: [
+            { name: 'Performance', href: '/gerant/personnel/performance', icon: FiUserCheck },
+            { name: 'Gestion Comptes', href: '/gerant/personnel/comptes', icon: FiSettings },
+        ]
+    },
+    {
+        name: 'Relation Client',
+        icon: FiMessageSquare,
+        subItems: [
+            { name: 'Gestion Base Clients', href: '/gerant/clients/gestion', icon: FiUsers },
+            { name: 'Comptes Entreprises', href: '/gerant/clients/releves', icon: FiFileText },
+            { name: 'Réclamations', href: '/gerant/clients/reclamations', icon: FiAlertOctagon },
+        ]
+    },
+    {
+        name: 'Maintenance',
+        icon: FiTool,
+        subItems: [
+            { name: 'Plans de Maintenance', href: '/gerant/maintenance/plans', icon: FiClipboard },
+            { name: 'Suivi Maintenance', href: '/gerant/maintenance/suivi', icon: FiCalendar },
+            { name: 'Affectations', href: '/chef-de-piste/affectations', icon: FiUsers }, // Lien vers la page du Chef de Piste
+        ]
+    },
+    {
+        name: 'Configuration',
+        icon: FiSettings,
+        subItems: [
+            { name: 'Configuration des Prix', href: '/gerant/config/prix', icon: FiDollarSign },
+            { name: 'Seuils & Alertes', href: '/gerant/config/seuils', icon: FiAlertTriangle },
+            { name: 'Logs d\'Activité', href: '/gerant/securite/logs', icon: FiShield },
+        ]
+    },
+];
+
 // --- Configuration principale des menus ---
-// Ici, on mappe chaque rôle à son menu spécifique.
 export const menuConfig: { [key in RoleType]: NavItem[] } = {
     pompiste: pompisteMenu,
     caissier: caissierMenu,
-    // Si vous aviez un rôle 'admin' :
-    // admin: [
-    //   { name: 'Vue Globale', href: '/admin/overview', icon: FiGrid },
-    //   { name: 'Gestion Utilisateurs', href: '/admin/users', icon: FiUsers },
-    //   { name: 'Paramètres Station', href: '/admin/settings', icon: FiSettings },
-    //   ...pompisteMenu, // Un admin pourrait avoir accès aux menus pompistes...
-    //   ...caissierMenu, // ...et caissiers
-    // ],
+    chef_de_piste: chefDePisteMenu,
+    gerant: gerantMenu,
 };

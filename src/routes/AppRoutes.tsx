@@ -3,8 +3,6 @@ import React from 'react';
 import { Routes, Route, Navigate, Link } from 'react-router-dom';
 import DashboardLayout from '../layouts/DashboardLayout';
 
-// --- Importations des Pages ---
-
 // Communes / Login / Non Trouvé
 import LoginPage from '../page/login/LoginPage';
 import ProfilPage from '../page/pompiste/ProfilPage';
@@ -20,10 +18,10 @@ import VentesTermeListPage from '../page/pompiste/VentesTermeListPage';
 import VentesTermeFormPage from '../page/pompiste/VentesTermeFormPage';
 import CarburantsPompistePage from '../page/pompiste/CarburantsPompistePage';
 import SignalerDysfonctionnementPage from '../page/pompiste/SignalerDysfonctionnementPage';
-import HistoriqueQuartsPompistePage from '../page/pompiste/HistoriqueQuartsPompistePage'; // <= NOUVEL IMPORT
+import HistoriqueQuartsPompistePage from '../page/pompiste/HistoriqueQuartsPompistePage';
 
-// Caissier
-import DashboardCaissierPage from '../page/caisssier/DashboardCaissierPage';// Corrigé le chemin si besoin (était caisssier)
+// Caissier (Vérifiez que le chemin du dossier est 'caissier' et non 'caisssier')
+import DashboardCaissierPage from '../page/caisssier/DashboardCaissierPage';
 import VentesCaisseListPage from '../page/caisssier/VentesCaisseListPage';
 import VentesCaisseFormPage from '../page/caisssier/VentesCaisseFormPage';
 import VentesTermeCaisseListPage from '../page/caisssier/VentesTermeCaisseListPage';
@@ -32,6 +30,28 @@ import StockBoutiquePage from '../page/caisssier/StockBoutiquePage';
 import SignalementEcartPage from '../page/caisssier/SignalementEcartPage';
 import SignalerDysfonctionnementCaissePage from '../page/caisssier/SignalerDysfonctionnementCaissePage';
 import HistoriqueCloturesCaissePage from '../page/caisssier/HistoriqueCloturesCaissePage';
+
+// Chef de Piste
+import DashboardChefDePistePage from '../page/chefDePiste/DashboardChefDePistePage';
+import SaisieIndexChefDePistePage from '../page/chefDePiste/SaisieIndexChefDePistePage';
+import AffectationPersonnelPage from '../page/chefDePiste/AffectationPersonnelPage';
+import SuiviPresencesPage from '../page/chefDePiste/SuiviPresencesPage';
+import SaisieCaissePhysiquePage from '../page/chefDePiste/SaisieCaissePhysiquePage';
+import SignalementEcartsChefDePistePage from '../page/chefDePiste/SignalementEcartsChefDePistePage';
+import SignalementMaterielChefDePistePage from '../page/chefDePiste/SignalementMaterielChefDePistePage';
+
+
+// --- Imports des pages Gérant ---
+import DashboardGerantPage from '../page/gerant/DashboardGerantPage';
+import GerantNiveauxCuvesPage from '../page/gerant/GerantNiveauxCuvesPage';
+import GerantBonsCommandePage from '../page/gerant/GerantBonsCommandePage';
+import GerantSuiviLivraisonsPage from '../page/gerant/GerantSuiviLivraisonsPage';
+import GerantStocksProduitsPage from '../page/gerant/GerantStocksProduitsPage';
+import GerantCataloguePage from '../page/gerant/GerantCataloguePage';
+import GerantVentesPersonnelPage from '../page/gerant/GerantVentesPersonnelPage';
+import GerantRapportsActivitePage from '../types/GerantRapportsActivitePage';
+import GerantVentesCreditPage from '../page/gerant/GerantVentesCreditPage';
+
 
 
 const AppRoutes: React.FC = () => {
@@ -44,13 +64,14 @@ const AppRoutes: React.FC = () => {
       {/* ----- Routes Principales (Post-Login) ----- */}
       <Route path="/dashboard" element={<DashboardPage />} />
       <Route path="/dashboard-caissier" element={<DashboardCaissierPage />} />
+      <Route path="/dashboard-chef-de-piste" element={<DashboardChefDePistePage />} />
+      <Route path="/gerant/dashboard" element={<DashboardGerantPage />} />
 
       {/* Communes */}
       <Route path="/profil" element={<ProfilPage />} />
       <Route path="/notifications" element={<NotificationsPage />} />
       <Route path="/agenda" element={<AgendaPage />} />
       <Route path="/signalements/absence" element={<SignalerAbsencePage />} />
-
 
       {/* --- Routes Spécifiques Pompiste --- */}
       <Route path="/ventes" element={<Navigate replace to="/ventes/directes" />} />
@@ -60,9 +81,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/ventes/terme/nouveau" element={<VentesTermeFormPage />} />
       <Route path="/carburants" element={<CarburantsPompistePage />} />
       <Route path="/signalements/dysfonctionnement" element={<SignalerDysfonctionnementPage />} />
-      {/* NOUVELLE ROUTE POUR L'HISTORIQUE POMPISTE */}
       <Route path="/historique-quarts" element={<HistoriqueQuartsPompistePage />} />
-
 
       {/* --- Routes Spécifiques Caissier --- */}
       <Route path="/caisse" element={<Navigate replace to="/dashboard-caissier" />} />
@@ -76,6 +95,26 @@ const AppRoutes: React.FC = () => {
       <Route path="/caisse/signalements/dysfonctionnement" element={<SignalerDysfonctionnementCaissePage />} />
       <Route path="/caisse/historique/clotures" element={<HistoriqueCloturesCaissePage />} />
 
+      {/* --- Routes Spécifiques Chef de Piste --- */}
+      <Route path="/chef-de-piste" element={<Navigate replace to="/dashboard-chef-de-piste" />} />
+      <Route path="/chef-de-piste/saisie-index" element={<SaisieIndexChefDePistePage />} />
+      <Route path="/chef-de-piste/affectations" element={<AffectationPersonnelPage />} />
+      <Route path="/chef-de-piste/presences" element={<SuiviPresencesPage />} />
+      <Route path="/chef-de-piste/saisie-caisse" element={<SaisieCaissePhysiquePage />} />
+      <Route path="/chef-de-piste/signalements/ecarts" element={<SignalementEcartsChefDePistePage />} />
+      <Route path="/chef-de-piste/signalements/materiel" element={<SignalementMaterielChefDePistePage />} />
+
+      
+      {/* --- Routes Spécifiques Gérant --- */}
+      <Route path="/gerant" element={<Navigate replace to="/gerant/dashboard" />} />
+      <Route path="/gerant/stocks/cuves" element={<GerantNiveauxCuvesPage />} />
+      <Route path="/gerant/commandes/nouveau" element={<GerantBonsCommandePage />} /> 
+      <Route path="/gerant/livraisons/suivi" element={<GerantSuiviLivraisonsPage />} /> 
+      <Route path="/gerant/stocks/produits" element={<GerantStocksProduitsPage />} />
+      <Route path="/gerant/catalogue/gestion" element={<GerantCataloguePage />} /> 
+      <Route path="/gerant/ventes/personnel" element={<GerantVentesPersonnelPage />} />
+      <Route path="/gerant/rapports/activite" element={<GerantRapportsActivitePage />} />   
+      <Route path="/gerant/ventes/credit" element={<GerantVentesCreditPage />} />   
       {/* ----- Page Non Trouvée (404) ----- */}
       <Route
         path="*"
@@ -90,7 +129,7 @@ const AppRoutes: React.FC = () => {
                 La page que vous recherchez n'existe pas ou a été déplacée.
               </p>
               <Link
-                to="/dashboard"
+                to="/login" // Ou dynamiquement vers le dashboard du rôle actuel si l'utilisateur est connecté
                 className="mt-8 inline-block px-6 py-3 bg-purple-600 text-white text-sm font-semibold rounded-md hover:bg-purple-700 transition-colors"
               >
                 Retour à l'accueil

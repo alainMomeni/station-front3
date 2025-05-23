@@ -76,7 +76,7 @@ const DashboardPompistePage: React.FC = () => {
       const change = ((fuelSalesSummary.totalLitresVendus - fuelSalesSummary.litresSemainePrecedente) / fuelSalesSummary.litresSemainePrecedente) * 100;
       if (isNaN(change) || !isFinite(change)) return undefined;
       const prefix = change >= 0 ? '+' : '';
-      return `${prefix}${change.toFixed(1)}% vs. sem. passée`;
+      return `${prefix}${change.toFixed(1)}% vs. quart. passée`;
   };
   const salesLitresChangeColor = fuelSalesSummary.totalLitresVendus >= fuelSalesSummary.litresSemainePrecedente ? 'text-green-600' : 'text-red-600';
 
@@ -84,7 +84,7 @@ const DashboardPompistePage: React.FC = () => {
     const change = ((fuelSalesSummary.totalVentesXAF - fuelSalesSummary.ventesXAFSemainePrecedente) / fuelSalesSummary.ventesXAFSemainePrecedente) * 100;
     if (isNaN(change) || !isFinite(change)) return undefined;
     const prefix = change >= 0 ? '+' : '';
-    return `${prefix}${change.toFixed(1)}% vs. sem. passée`;
+    return `${prefix}${change.toFixed(1)}% vs. quart. passée`;
   };
   const salesXAFChangeColor = fuelSalesSummary.totalVentesXAF >= fuelSalesSummary.ventesXAFSemainePrecedente ? 'text-green-600' : 'text-red-600';
 

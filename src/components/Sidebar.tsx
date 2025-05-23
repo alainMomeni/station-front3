@@ -1,22 +1,18 @@
 // src/components/Sidebar.tsx
-import React, { useState, useEffect } from 'react'; // useState pourrait ne plus être nécessaire si openSubmenus est géré autrement, mais gardons-le pour l'instant
+import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { FiX, FiChevronDown, FiChevronRight } from 'react-icons/fi'; // FiRepeat retiré
-
-// Import de la configuration des menus et des types
+import { FiX, FiChevronDown, FiChevronRight } from 'react-icons/fi';
 import { menuConfig } from '../config/menuConfig'; // Assurez-vous que ce chemin est correct
 import type { NavItem, RoleType } from '../config/menuConfig';
 
 // --- !! CONSTANTE POUR SIMULER LE RÔLE CONNECTÉ !! ---
-// --- !! MODIFIEZ CETTE VALEUR ('pompiste' ou 'caissier') POUR TESTER !! ---
+// --- !! MODIFIEZ CETTE VALEUR ('pompiste', 'caissier', 'chef_de_piste' ou 'gerant') POUR TESTER !! ---
 const SIMULATED_ROLE: RoleType = 'pompiste';
 // --- !! -------------------------------------------------- !! ---
-
 
 interface SidebarProps {
   isMobileOpen: boolean;
   toggleMobileSidebar: () => void;
-  // Le rôle n'est plus passé ou géré en état local pour le switch UI
 }
 
 // Helper pour classNames
@@ -26,32 +22,24 @@ function classNames(...classes: string[]) {
 
 const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, toggleMobileSidebar }) => {
     const location = useLocation();
-
-    // Utilise la constante SIMULATED_ROLE définie ci-dessus
     const currentRole = SIMULATED_ROLE;
+
     const userInfo = {
         pompiste: { name: 'Natalya P.', initial: 'N', roleLabel: 'Pompiste' },
         caissier: { name: 'Jean C.', initial: 'J', roleLabel: 'Caissier' },
-    }[currentRole]; // Utilise currentRole (qui est maintenant la constante)
+        chef_de_piste: { name: 'Amina C.', initial: 'A', roleLabel: 'Chef de Piste' },
+        gerant: { name: 'M. Diallo', initial: 'D', roleLabel: 'Gérant' },
+    }[currentRole];
 
     const [openSubmenus, setOpenSubmenus] = useState<{ [key: string]: boolean }>({});
-
-    // --- Obtenir la navigation basée sur le rôle simulé ---
     const navigation: NavItem[] = menuConfig[currentRole] || [];
 
-    // L'effet pour pré-ouvrir le sous-menu actif peut rester utile
     useEffect(() => {
         const activeParent = navigation.find(isParentActive);
         if (activeParent && activeParent.subItems) {
             setOpenSubmenus(prev => ({...prev, [activeParent.name]: true}));
-        } else {
-           // Optionnel: Réinitialiser si aucun parent n'est actif?
-           // setOpenSubmenus({});
         }
-         // La dépendance à navigation est correcte car elle change si SIMULATED_ROLE change (après rechargement)
-         // Et location.pathname pour recalculer si on navigue
     }, [navigation, location.pathname]);
-
 
     const toggleSubmenu = (itemName: string) => {
         setOpenSubmenus(prev => ({ ...prev, [itemName]: !prev[itemName] }));
@@ -78,9 +66,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, toggleMobileSidebar }) 
                 </button>
             </div>
 
-            {/* User Profile (sans le bouton de switch) */}
+            {/* User Profile */}
             <div className="px-6 py-5 flex items-center space-x-4">
-                 {/* Affichage Profil */}
                 <div className="flex-shrink-0 h-12 w-12 rounded-full bg-purple-600 flex items-center justify-center text-white text-xl font-medium">
                     {userInfo.initial}
                 </div>
@@ -88,7 +75,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, toggleMobileSidebar }) 
                     <p className="text-base font-semibold text-gray-800">{userInfo.name}</p>
                     <p className="text-sm text-gray-500">{userInfo.roleLabel}</p>
                 </div>
-                {/* Le bouton FiRepeat a été retiré ici */}
             </div>
 
             {/* Navigation */}
@@ -98,13 +84,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, toggleMobileSidebar }) 
                 </p>
                 {navigation.map((item) => {
                     const isCurrentParentActive = isParentActive(item);
+                    // Ajustement pour inclure tous les dashboards principaux potentiels
+                    const mainDashboardPaths = ['/dashboard', '/dashboard-caissier', '/dashboard-chef-de-piste', '/gerant/dashboard'];
                     const isDirectLinkActive = item.href
-                      ? (item.href === '/dashboard' ? location.pathname === item.href : location.pathname.startsWith(item.href))
+                      ? (mainDashboardPaths.includes(item.href) ? location.pathname === item.href : location.pathname.startsWith(item.href))
                       : false;
                     const isActive = isDirectLinkActive || isCurrentParentActive;
                     const isSubmenuOpen = openSubmenus[item.name] || false;
 
-                    // Logique de rendu des items et sous-items (INCHANGÉE)
                     if (item.subItems) {
                         return (
                             <div key={item.name}>
@@ -140,7 +127,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, toggleMobileSidebar }) 
                             </div>
                         );
                     }
-                    return ( // Lien direct
+                    return (
                         <Link key={item.name} to={item.href!} onClick={isMobileOpen ? toggleMobileSidebar : undefined}
                             className={classNames( isActive ? 'bg-purple-100 text-purple-700 border-l-4 border-purple-600 font-medium' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 border-l-4 border-transparent', 'group flex items-center px-3 py-2.5 text-sm rounded-md transition duration-150 ease-in-out')}
                             aria-current={isActive ? 'page' : undefined} >
@@ -153,7 +140,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, toggleMobileSidebar }) 
         </div>
     );
 
-     // --- Structure Mobile / Desktop Sidebar (INCHANGÉE) ---
      return (
         <>
             {isMobileOpen && ( <div className="fixed inset-0 z-30 bg-black bg-opacity-50 transition-opacity duration-300 md:hidden" onClick={toggleMobileSidebar} aria-hidden="true" /> )}
