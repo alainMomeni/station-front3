@@ -1,6 +1,6 @@
 // src/components/widgets/QuartSelectorWidget.tsx
 import React from 'react';
-import { FiCalendar, FiChevronDown } from 'react-icons/fi';
+import { FiChevronDown } from 'react-icons/fi';
 
 export interface QuartTravail {
   id: string;
