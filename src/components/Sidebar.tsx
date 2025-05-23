@@ -7,7 +7,7 @@ import type { NavItem, RoleType } from '../config/menuConfig';
 
 // --- !! CONSTANTE POUR SIMULER LE RÔLE CONNECTÉ !! ---
 // --- !! MODIFIEZ CETTE VALEUR ('pompiste', 'caissier', 'chef_de_piste' ou 'gerant') POUR TESTER !! ---
-const SIMULATED_ROLE: RoleType = 'pompiste';
+const SIMULATED_ROLE: RoleType = 'caissier';
 // --- !! -------------------------------------------------- !! ---
 
 interface SidebarProps {
