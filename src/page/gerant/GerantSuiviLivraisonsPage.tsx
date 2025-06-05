@@ -2,10 +2,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import DashboardLayout from '../../layouts/DashboardLayout';
 import Spinner from '../../components/Spinner';
-import { FiTruck, FiCheckSquare, FiAlertCircle, FiEdit, FiPackage, FiXCircle } from 'react-icons/fi';
+import { FiCheckSquare, FiAlertCircle, FiEdit, FiPackage, FiXCircle } from 'react-icons/fi';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import type { BonCommandeData, LigneBonCommande, Fournisseur } from '../../types/achats'; // Adapter le chemin
+import { tableConfig } from '../../config/tableConfig';
 
 // --- Données Mock ---
 // Réutiliser les fournisseurs et produits
@@ -215,9 +216,9 @@ const GerantSuiviLivraisonsPage: React.FC = () => {
     <DashboardLayout>
       <div className="flex flex-col md:flex-row justify-between md:items-center mb-6 gap-3">
         <h1 className="text-xl md:text-2xl font-semibold text-gray-800 border-b-2 border-purple-600 inline-block pr-4 pb-1 shrink-0">
-          <FiTruck className="inline-block mr-2 mb-1 h-6 w-6" /> Suivi & Validation des Livraisons
+           Suivi & Validation des Livraisons
         </h1>
-         <div className="w-full md:w-auto">
+         <div className="w-full rounded-lg bg-white md:w-auto">
             <label htmlFor="filtreStatutBC" className="sr-only">Filtrer par statut BC</label>
             <select id="filtreStatutBC" value={filtreStatut} 
                 onChange={e => setFiltreStatut(e.target.value as any)}
@@ -238,47 +239,65 @@ const GerantSuiviLivraisonsPage: React.FC = () => {
       )}
 
       {!isLoading && filteredBC.length > 0 && !selectedBC && (
-        <div className="bg-white p-4 rounded-lg shadow-md">
+        <div className={tableConfig.container.wrapper}>
           <h2 className="text-md font-semibold text-gray-700 mb-3">Livraisons à traiter / suivre :</h2>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 text-sm">
-              <thead className="bg-gray-50">
+          <div className={tableConfig.container.tableWrapper}>
+            <table className={tableConfig.container.table}>
+              <thead className={tableConfig.header.wrapper}>
                 <tr>
-                  <th className="px-4 py-2 text-left font-medium text-gray-500 uppercase tracking-wider">N° BC</th>
-                  <th className="px-4 py-2 text-left font-medium text-gray-500 uppercase tracking-wider">Fournisseur</th>
-                  <th className="px-4 py-2 text-left font-medium text-gray-500 uppercase tracking-wider">Date Cmd.</th>
-                  <th className="px-4 py-2 text-left font-medium text-gray-500 uppercase tracking-wider">Liv. Prévue</th>
-                  <th className="px-4 py-2 text-left font-medium text-gray-500 uppercase tracking-wider">Statut</th>
-                  <th className="px-4 py-2 text-center font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  <th className={tableConfig.header.cell.base}>N° BC</th>
+                  <th className={tableConfig.header.cell.base}>Fournisseur</th>
+                  <th className={tableConfig.header.cell.base}>Date Cmd.</th>
+                  <th className={tableConfig.header.cell.base}>Liv. Prévue</th>
+                  <th className={tableConfig.header.cell.base}>Statut</th>
+                  <th className={tableConfig.header.cell.center}>Actions</th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {filteredBC.map(bc => (
-                  <tr key={bc.id} className="hover:bg-purple-50/30">
-                    <td className="px-4 py-3 whitespace-nowrap font-medium">{bc.numeroBC}</td>
-                    <td className="px-4 py-3 whitespace-nowrap">{bc.fournisseurNom}</td>
-                    <td className="px-4 py-3 whitespace-nowrap">{format(new Date(bc.dateCommande + 'T00:00:00'), 'dd/MM/yyyy', {locale:fr})}</td>
-                    <td className="px-4 py-3 whitespace-nowrap">{bc.dateLivraisonSouhaitee ? format(new Date(bc.dateLivraisonSouhaitee + 'T00:00:00'), 'dd/MM/yyyy', {locale:fr}) : '-'}</td>
-                    <td className="px-4 py-3 whitespace-nowrap">
+              <tbody className={tableConfig.body.wrapper}>
+                {filteredBC.length > 0 ? (
+                  filteredBC.map(bc => (
+                    <tr key={bc.id} className={tableConfig.body.row.base}>
+                      <td className={tableConfig.body.cell.base}>
+                        <span className={tableConfig.body.cell.text.primary}>{bc.numeroBC}</span>
+                      </td>
+                      <td className={tableConfig.body.cell.base}>
+                        {bc.fournisseurNom}
+                      </td>
+                      <td className={tableConfig.body.cell.base}>
+                        {format(new Date(bc.dateCommande + 'T00:00:00'), 'dd/MM/yyyy', {locale:fr})}
+                      </td>
+                      <td className={tableConfig.body.cell.base}>
+                        {bc.dateLivraisonSouhaitee ? format(new Date(bc.dateLivraisonSouhaitee + 'T00:00:00'), 'dd/MM/yyyy', {locale:fr}) : '-'}
+                      </td>
+                      <td className={tableConfig.body.cell.base}>
                         <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            bc.statut === 'soumis' ? 'bg-blue-100 text-blue-800' :
-                            bc.statut === 'partiellement_livre' ? 'bg-yellow-100 text-yellow-800' :
-                            bc.statut === 'livre' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                          bc.statut === 'soumis' ? 'bg-blue-100 text-blue-800' :
+                          bc.statut === 'partiellement_livre' ? 'bg-yellow-100 text-yellow-800' :
+                          bc.statut === 'livre' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
                         }`}>
-                            {bc.statut.replace('_', ' ').toUpperCase()}
+                          {bc.statut.replace('_', ' ').toUpperCase()}
                         </span>
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-center">
-                      <button onClick={() => handleSelectBC(bc)} 
-                              className="text-purple-600 hover:text-purple-900 font-medium text-xs inline-flex items-center"
-                              title={bc.statut === 'livre' ? "Consulter Détails" : "Valider / Modifier Réception"}>
-                        <FiEdit className="mr-1"/> {bc.statut === 'livre' ? "Détails" : "Vérifier"}
-                      </button>
-                      {/* Option d'impression du BC original */}
-                      {/* <button className="ml-2 text-gray-500 hover:text-gray-700" title="Imprimer BC"><FiPrinter size={14}/></button> */}
+                      </td>
+                      <td className={tableConfig.body.cell.center}>
+                        <div className={tableConfig.actions.wrapper}>
+                          <button 
+                            onClick={() => handleSelectBC(bc)}
+                            className={tableConfig.actions.button.edit}
+                            title={bc.statut === 'livre' ? "Consulter Détails" : "Valider / Modifier Réception"}
+                          >
+                            <FiEdit className="mr-1"/> {bc.statut === 'livre' ? "Détails" : "Vérifier"}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={6} className={tableConfig.empty.wrapper}>
+                      Aucune livraison ne correspond aux critères sélectionnés.
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>

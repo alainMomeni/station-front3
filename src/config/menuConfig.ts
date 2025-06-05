@@ -1,10 +1,10 @@
-// src/config/menuConfig.ts
 import React from 'react';
 import {
     FiGrid, FiShoppingCart, FiDroplet, FiCalendar, FiAlertTriangle, FiUserX,
     FiTool, FiDollarSign, FiPackage, FiSliders, FiArchive, FiBarChart2, FiLayers,
     FiUsers, FiUserCheck, FiDatabase, FiList, FiAlertOctagon, FiSettings, FiBriefcase,
-    FiTrendingUp, FiCreditCard, FiFileText, FiMessageSquare, FiShield, FiClipboard, FiBell, FiUser // Ajout de FiBell et FiUser
+    FiTrendingUp, FiCreditCard, FiFileText, FiMessageSquare, FiShield, FiClipboard,
+    FiHardDrive, FiZap // Ajout d'icônes pour les équipements
 } from 'react-icons/fi';
 
 // --- Interfaces pour les éléments de navigation ---
@@ -22,7 +22,7 @@ export interface NavItem {
 }
 
 // --- Définition des Rôles ---
-export type RoleType = 'pompiste' | 'caissier' | 'chef_de_piste' | 'gerant'; // Ajout du Gérant
+export type RoleType = 'pompiste' | 'caissier' | 'chef_de_piste' | 'gerant'; 
 
 // --- Menu pour le rôle 'pompiste' ---
 const pompisteMenu: NavItem[] = [
@@ -104,11 +104,10 @@ const chefDePisteMenu: NavItem[] = [
         ]
     },
     { name: 'Mon Planning', href: '/agenda', icon: FiCalendar },
-    { name: 'Notifications', href: '/notifications', icon: FiBell },
-    { name: 'Mon Profil', href: '/profil', icon: FiUser },
+
 ];
 
-// --- NOUVEAU: Menu pour le Gérant ---
+// --- Menu pour le Gérant ---
 const gerantMenu: NavItem[] = [
     { name: 'Tableau de Bord', href: '/gerant/dashboard', icon: FiGrid },
     {
@@ -136,7 +135,7 @@ const gerantMenu: NavItem[] = [
         icon: FiDollarSign,
         subItems: [
             { name: 'Marges', href: '/gerant/finance/marges', icon: FiSliders },
-            { name: 'Gestion des Dépenses', href: '/gerant/finance/depenses', icon: FiBriefcase },
+            { name: 'Dépenses', href: '/gerant/finance/depenses', icon: FiBriefcase },
             { name: 'Facturation Clients', href: '/gerant/finance/facturation', icon: FiFileText },
         ]
     },
@@ -158,19 +157,21 @@ const gerantMenu: NavItem[] = [
         ]
     },
     {
-        name: 'Maintenance',
+        name: 'Équipements',
         icon: FiTool,
         subItems: [
             { name: 'Plans de Maintenance', href: '/gerant/maintenance/plans', icon: FiClipboard },
             { name: 'Suivi Maintenance', href: '/gerant/maintenance/suivi', icon: FiCalendar },
-            { name: 'Affectations', href: '/chef-de-piste/affectations', icon: FiUsers }, // Lien vers la page du Chef de Piste
+            { name: 'Affectations', href: '/chef-de-piste/affectations', icon: FiUsers },
+            { name: 'Gestion des Pompes', href: '/gerant/equipements/pompes', icon: FiZap },
+            { name: 'Gestion des Cuves', href: '/gerant/equipements/cuves', icon: FiHardDrive },
         ]
     },
     {
         name: 'Configuration',
         icon: FiSettings,
         subItems: [
-            { name: 'Configuration des Prix', href: '/gerant/config/prix', icon: FiDollarSign },
+            { name: 'Prix', href: '/gerant/config/prix', icon: FiDollarSign },
             { name: 'Seuils & Alertes', href: '/gerant/config/seuils', icon: FiAlertTriangle },
             { name: 'Logs d\'Activité', href: '/gerant/securite/logs', icon: FiShield },
         ]

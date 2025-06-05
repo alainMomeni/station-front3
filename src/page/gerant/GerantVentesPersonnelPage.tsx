@@ -3,8 +3,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import DashboardLayout from '../../layouts/DashboardLayout';
 import Spinner from '../../components/Spinner';
 import { 
-    FiBarChart2, FiChevronDown, FiChevronLeft, FiChevronRight, 
-    FiCalendar, FiUsers, FiClock 
+    FiBarChart2, FiChevronDown, FiChevronLeft, FiChevronRight, FiCalendar
 } from 'react-icons/fi';
 import QuartSelectorWidget, { type QuartTravail } from '../../components/widgets/QuartSelectorWidget'; // Adapter le chemin
 import { format, startOfDay, addDays, subDays } from 'date-fns';
@@ -158,32 +157,46 @@ const GerantVentesPersonnelPage: React.FC = () => {
     <DashboardLayout>
       <div className="mb-6">
         <h1 className="text-xl md:text-2xl font-semibold text-gray-800 border-b-2 border-purple-600 inline-block pr-4 pb-1 mb-6">
-          <FiBarChart2 className="inline-block mr-2 mb-1 h-6 w-6" /> Performance des Ventes par Employé
+           Performance des Ventes par Employé
         </h1>
 
         <div className="bg-white rounded-lg shadow-sm p-4">
           <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
             <div className="w-full sm:w-auto">
-              <label className="block text-xs font-medium text-gray-600 mb-1 flex items-center">
-                <FiCalendar className="mr-2 h-4 w-4 text-gray-400" />
-                Date
-              </label>
-              <div className="flex items-center">
-                <button onClick={() => setSelectedDate(prev => subDays(prev, 1))} className="p-2.5 rounded-l-md border border-r-0 border-gray-300 hover:bg-purple-50 disabled:opacity-50 text-gray-600 hover:text-purple-600 transition-colors" aria-label="Jour précédent" disabled={isLoading}>
-                    <FiChevronLeft className="h-4 w-4" />
+              <div className="flex items-center bg-white rounded-lg shadow-sm">
+                <button 
+                  onClick={() => setSelectedDate(prev => subDays(prev, 1))} 
+                  className="p-2.5 rounded-l-lg border border-r-0 border-gray-300 hover:bg-purple-50 disabled:opacity-50 text-gray-600 hover:text-purple-600 transition-all duration-200 hover:shadow-sm disabled:hover:bg-transparent"
+                  aria-label="Jour précédent" 
+                  disabled={isLoading}
+                >
+                  <FiChevronLeft className="h-4 w-4 transition-transform group-hover:scale-110" />
                 </button>
-                <input type="date" value={inputDateValue} onChange={handleDateInputChange} disabled={isLoading} className="p-2 border-y border-gray-300 focus:ring-purple-500 focus:border-purple-500 text-sm w-full text-center bg-white" style={{minWidth: '140px'}} />
-                <button onClick={() => setSelectedDate(prev => addDays(prev, 1))} className="p-2.5 rounded-r-md border border-l-0 border-gray-300 hover:bg-purple-50 disabled:opacity-50 text-gray-600 hover:text-purple-600 transition-colors" aria-label="Jour suivant" disabled={isLoading}>
-                    <FiChevronRight className="h-4 w-4" />
+                <div className="relative">
+                  <input 
+                    type="date" 
+                    value={inputDateValue} 
+                    onChange={handleDateInputChange} 
+                    disabled={isLoading} 
+                    className="p-2 border-y border-gray-300 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 text-sm w-full text-center bg-white appearance-none outline-none transition-colors duration-200" 
+                    style={{minWidth: '160px'}} 
+                  />
+                  <div className="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
+                    <FiCalendar className="h-4 w-4 text-gray-400" />
+                  </div>
+                </div>
+                <button 
+                  onClick={() => setSelectedDate(prev => addDays(prev, 1))} 
+                  className="p-2.5 rounded-r-lg border border-l-0 border-gray-300 hover:bg-purple-50 disabled:opacity-50 text-gray-600 hover:text-purple-600 transition-all duration-200 hover:shadow-sm disabled:hover:bg-transparent"
+                  aria-label="Jour suivant" 
+                  disabled={isLoading}
+                >
+                  <FiChevronRight className="h-4 w-4 transition-transform group-hover:scale-110" />
                 </button>
               </div>
             </div>
 
             <div className="w-full sm:w-auto">
-              <label className="block text-xs font-medium text-gray-600 mb-1 flex items-center">
-                <FiClock className="mr-2 h-4 w-4 text-gray-400" />
-                Quart de travail
-              </label>
               <QuartSelectorWidget
                 quartsDisponibles={quartsDuJour}
                 quartSelectionneId={selectedQuartId}
@@ -194,20 +207,34 @@ const GerantVentesPersonnelPage: React.FC = () => {
             </div>
 
             <div className="w-full sm:w-auto">
-              <label className="block text-xs font-medium text-gray-600 mb-1 flex items-center">
-                <FiUsers className="mr-2 h-4 w-4 text-gray-400" />
-                Filtrer par employé
-              </label>
-              <div className="relative">
+              <div className="relative group">
                 <select 
-                  id="filtreEmploye" value={selectedEmployeId || ''} onChange={e => setSelectedEmployeId(e.target.value || null)} disabled={isLoading}
-                  className="block w-full text-sm border-gray-300 rounded-md shadow-sm py-2.5 px-3 pr-8 focus:ring-purple-500 focus:border-purple-500 cursor-pointer bg-white appearance-none min-w-[200px]"
+                  id="filtreEmploye" 
+                  value={selectedEmployeId || ''} 
+                  onChange={e => setSelectedEmployeId(e.target.value || null)} 
+                  disabled={isLoading}
+                  className="
+                    block w-full text-sm border border-gray-300 
+                    rounded-lg shadow-sm py-2 px-3 pr-10
+                    focus:ring-2 focus:ring-purple-500/20 
+                    focus:border-purple-500 
+                    disabled:bg-gray-50 disabled:cursor-not-allowed
+                    cursor-pointer bg-white appearance-none 
+                    transition-all duration-200
+                    hover:border-purple-400
+                    group-hover:border-purple-400 outline-none
+                    min-w-[220px]
+                  "
                 >
                   <option value="">Tous les Employés</option>
-                  {dummyEmployesSimples.map(emp => (<option key={emp.id} value={emp.id}>{emp.nomComplet}</option>))}
+                  {dummyEmployesSimples.map(emp => (
+                    <option key={emp.id} value={emp.id}>
+                      {emp.nomComplet}
+                    </option>
+                  ))}
                 </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                  <FiChevronDown className="h-4 w-4" />
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 group-hover:text-purple-500 transition-colors">
+                  <FiChevronDown className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
                 </div>
               </div>
             </div>
@@ -216,16 +243,14 @@ const GerantVentesPersonnelPage: React.FC = () => {
       </div>
 
       {isLoading && (
-        <div className="bg-white rounded-lg shadow-sm p-12"><div className="flex justify-center"><Spinner size="lg"/></div></div>
+        <div className="flex justify-center"><Spinner size="lg"/></div>
       )}
       
       {!isLoading && ventesPersonnel.length === 0 && (
-        <div className="bg-white p-8 rounded-lg shadow-sm text-center">
           <div className="text-gray-500 flex flex-col items-center">
             <FiBarChart2 className="h-12 w-12 mb-4 text-gray-400" />
             <p>Aucune donnée de vente à afficher pour les critères sélectionnés.</p>
           </div>
-        </div>
       )}
 
       {!isLoading && ventesPersonnel.length > 0 && (

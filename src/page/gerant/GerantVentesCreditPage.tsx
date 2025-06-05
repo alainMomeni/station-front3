@@ -2,11 +2,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import DashboardLayout from '../../layouts/DashboardLayout';
 import Spinner from '../../components/Spinner';
-import { FiCreditCard, FiUsers, FiFileText, FiDollarSign, FiSearch, FiEdit3, FiEye } from 'react-icons/fi';
-import type { ClientProfessionnel, TransactionCredit } from '../../types/ventes'; // Adapter le chemin
+import { FiUsers, FiFileText, FiDollarSign, FiSearch, FiEdit3, FiEye, FiFilter, FiX } from 'react-icons/fi';
+import type { ClientProfessionnel, TransactionCredit } from '../../types/ventes';
 import { format } from 'date-fns';
-// Importer le modal de facturation si vous en créez un
-// import FacturationClientModal from '../../components/modals/FacturationClientModal';
 
 // --- Données Mock ---
 const dummyClientsPro: ClientProfessionnel[] = [
@@ -34,14 +32,9 @@ const GerantVentesCreditPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   
   const [searchTermClient, setSearchTermClient] = useState('');
-  // State pour le modal de facturation (si vous l'implémentez)
-  // const [showFacturationModal, setShowFacturationModal] = useState(false);
-  // const [clientPourFacturation, setClientPourFacturation] = useState<ClientProfessionnel | null>(null);
-
 
   useEffect(() => {
     setIsLoading(true);
-    // Simuler le chargement des données
     setTimeout(() => {
       setClientsPro(dummyClientsPro);
       setTransactionsCredit(dummyTransactionsCreditNonFacturees.filter(t => !t.estFacturee));
@@ -60,39 +53,24 @@ const GerantVentesCreditPage: React.FC = () => {
 
   const handleGererLimites = (client: ClientProfessionnel) => {
       alert(`Gestion des limites pour ${client.nomEntreprise}. Redirection ou modal à implémenter.`);
-      // Ici, vous ouvririez un modal ou naviguerez vers une page pour modifier client.limiteCredit
   };
   
   const handleGenererFacture = (client: ClientProfessionnel) => {
       alert(`Génération de facture pour ${client.nomEntreprise}. Sélection des transactions et création de facture à implémenter.`);
-      // Ouvrir un modal de facturation:
-      // setClientPourFacturation(client);
-      // setShowFacturationModal(true);
   };
    const handleVoirDetailsCompte = (client: ClientProfessionnel) => {
     alert(`Affichage des détails du compte et de l'historique des transactions pour ${client.nomEntreprise} (page/modal à implémenter).`);
-    // Pourrait naviguer vers une page client_details/${client.id}
   };
 
-  // Styles réutilisables
   const thClass = "px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider";
   const tdClass = "px-4 py-3 whitespace-nowrap text-sm";
 
-  if (isLoading) {
-    return <DashboardLayout><div className="flex justify-center items-center py-20"><Spinner size="lg" /></div></DashboardLayout>;
-  }
-  
   return (
     <DashboardLayout>
       <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-6 gap-3">
         <h1 className="text-xl md:text-2xl font-semibold text-gray-800 border-b-2 border-purple-600 inline-block pr-4 pb-1 shrink-0">
-          <FiCreditCard className="inline-block mr-2 mb-1 h-6 w-6" /> Gestion des Ventes à Crédit
+           Gestion des Ventes à Crédit
         </h1>
-        <div className="flex space-x-2 shrink-0">
-             {/* <Link to="/gerant/ventes/credit/nouveau" className="btn-primary-sm">
-                <FiPlusCircle className="mr-1.5"/> Nouvelle Vente à Crédit
-            </Link> */}
-        </div>
       </div>
 
       {/* Onglets */}
@@ -111,104 +89,136 @@ const GerantVentesCreditPage: React.FC = () => {
         </nav>
       </div>
 
+      {/* Section de recherche pour l'onglet Comptes Clients */}
       {activeTab === 'comptesClients' && (
-        <div className="bg-white p-4 md:p-6 rounded-lg shadow-md">
-          <div className="mb-4 flex items-center gap-3">
-             <div className="relative flex-grow">
-                <FiSearch className="absolute h-4 w-4 text-gray-400 left-3 top-1/2 -translate-y-1/2"/>
-                <input type="text" placeholder="Rechercher un client..." value={searchTermClient} onChange={e => setSearchTermClient(e.target.value)} className="pl-9 pr-3 py-2 w-full sm:w-72 border border-gray-300 rounded-md sm:text-sm" />
+        <div className="mb-6 bg-white p-4 rounded-lg shadow-sm">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center text-gray-500">
+              <FiFilter className="h-5 w-5" />
+              <span className="ml-2 text-sm font-medium">Filtres</span>
+            </div>
+            
+            <div className="relative flex-grow sm:flex-grow-0 group">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <FiSearch className="h-4 w-4 text-gray-400 group-hover:text-purple-500 transition-colors duration-150" />
+              </div>
+              <input 
+                type="text" 
+                placeholder="Rechercher un client..." 
+                value={searchTermClient} 
+                onChange={e => setSearchTermClient(e.target.value)} 
+                className="
+                  block w-full sm:w-72 pl-10 pr-4 py-2
+                  text-sm text-gray-900 
+                  border border-gray-300 rounded-lg
+                  bg-white shadow-sm
+                  transition-all duration-150
+                  placeholder-gray-400
+                  focus:ring-2 focus:ring-purple-500/20 
+                  focus:border-purple-500
+                  hover:border-purple-400
+                  outline-none
+                "
+              />
+              {searchTermClient && (
+                <button
+                  onClick={() => setSearchTermClient('')}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600"
+                >
+                  <FiX className="h-4 w-4" />
+                </button>
+              )}
             </div>
           </div>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+        </div>
+      )}
+
+      {/* Contenu des onglets */}
+      {isLoading ? (
+        <div className="flex justify-center items-center py-20">
+          <Spinner size="lg" />
+        </div>
+      ) : (
+        <div className="bg-white p-4 md:p-6 rounded-lg shadow-md">
+          {activeTab === 'comptesClients' && (
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
-                    <tr>
-                        <th className={thClass}>Nom Entreprise</th>
-                        <th className={`${thClass} text-right`}>Solde Actuel</th>
-                        <th className={`${thClass} text-right hidden sm:table-cell`}>Limite Crédit</th>
-                        <th className={`${thClass} text-right hidden md:table-cell`}>Crédit Dispo.</th>
-                        <th className={`${thClass} text-center`}>Statut</th>
-                        <th className={thClass}>Actions</th>
-                    </tr>
+                  <tr>
+                    <th className={thClass}>Nom Entreprise</th>
+                    <th className={`${thClass} text-right`}>Solde Actuel</th>
+                    <th className={`${thClass} text-right hidden sm:table-cell`}>Limite Crédit</th>
+                    <th className={`${thClass} text-right hidden md:table-cell`}>Crédit Dispo.</th>
+                    <th className={`${thClass} text-center`}>Statut</th>
+                    <th className={thClass}>Actions</th>
+                  </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                {filteredClientsPro.map(client => {
+                  {filteredClientsPro.map(client => {
                     const creditDisponible = client.limiteCredit - client.soldeActuel;
-                    const statutCouleur = client.statutCompte === 'bloque' || creditDisponible < 0 ? 'text-red-600' : 
-                                          client.soldeActuel > client.limiteCredit * 0.8 ? 'text-yellow-600' : 'text-green-600';
+                    const statutCouleur = client.statutCompte === 'bloque' || creditDisponible < 0 ? 'text-red-600' :
+                      client.soldeActuel > client.limiteCredit * 0.8 ? 'text-yellow-600' : 'text-green-600';
                     return (
-                    <tr key={client.id} className="hover:bg-purple-50/20">
+                      <tr key={client.id} className="hover:bg-purple-50/20">
                         <td className={`${tdClass} font-medium text-gray-900`}>{client.nomEntreprise}</td>
                         <td className={`${tdClass} text-right font-semibold ${client.soldeActuel > 0 ? 'text-orange-600' : 'text-gray-700'}`}>{formatCurrency(client.soldeActuel)}</td>
                         <td className={`${tdClass} text-right hidden sm:table-cell`}>{formatCurrency(client.limiteCredit)}</td>
                         <td className={`${tdClass} text-right hidden md:table-cell font-medium ${statutCouleur}`}>{formatCurrency(creditDisponible)}</td>
                         <td className={`${tdClass} text-center`}>
-                            <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                client.statutCompte === 'actif' ? 'bg-green-100 text-green-800' :
-                                client.statutCompte === 'bloque' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'}`}>
-                                {client.statutCompte?.toUpperCase() || 'N/A'}
-                            </span>
+                          <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full ${client.statutCompte === 'actif' ? 'bg-green-100 text-green-800' :
+                              client.statutCompte === 'bloque' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'}`}>
+                            {client.statutCompte?.toUpperCase() || 'N/A'}
+                          </span>
                         </td>
                         <td className={`${tdClass} space-x-2 whitespace-nowrap`}>
-                            <button onClick={() => handleVoirDetailsCompte(client)} className="text-blue-600 hover:text-blue-800" title="Détails Compte"><FiEye size={16}/></button>
-                            <button onClick={() => handleGererLimites(client)} className="text-indigo-600 hover:text-indigo-800" title="Gérer Limites/Infos Client"><FiEdit3 size={16}/></button>
-                            <button onClick={() => handleGenererFacture(client)} className="text-green-600 hover:text-green-800" title="Générer Facture"><FiFileText size={16}/></button>
+                          <button onClick={() => handleVoirDetailsCompte(client)} className="text-blue-600 hover:text-blue-800" title="Détails Compte"><FiEye size={16} /></button>
+                          <button onClick={() => handleGererLimites(client)} className="text-indigo-600 hover:text-indigo-800" title="Gérer Limites/Infos Client"><FiEdit3 size={16} /></button>
+                          <button onClick={() => handleGenererFacture(client)} className="text-green-600 hover:text-green-800" title="Générer Facture"><FiFileText size={16} /></button>
                         </td>
-                    </tr>
+                      </tr>
                     );
-                })}
-                {filteredClientsPro.length === 0 && (
-                     <tr><td colSpan={6} className="text-center py-8 text-gray-500">Aucun client professionnel trouvé.</td></tr>
-                )}
+                  })}
+                  {filteredClientsPro.length === 0 && (
+                    <tr><td colSpan={6} className="text-center py-8 text-gray-500">Aucun client professionnel trouvé pour votre recherche ou aucun client défini.</td></tr>
+                  )}
                 </tbody>
-            </table>
-          </div>
+              </table>
+            </div>
+          )}
+
+          {activeTab === 'transactionsNonFacturees' && (
+            <div>
+              <h2 className="text-md font-semibold text-gray-700 mb-3">Transactions à Crédit Non Facturées</h2>
+              {transactionsCredit.length === 0 ? (
+                <p className="text-gray-500 italic">Aucune transaction à crédit non facturée pour le moment.</p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className={thClass}>Date</th>
+                        <th className={thClass}>Client</th>
+                        <th className={thClass}>Description</th>
+                        <th className={`${thClass} text-right`}>Montant</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {transactionsCredit.map(tx => (
+                        <tr key={tx.id} className="hover:bg-purple-50/20">
+                          <td className={tdClass}>{format(new Date(tx.dateTransaction), 'dd/MM/yyyy HH:mm')}</td>
+                          <td className={`${tdClass} font-medium`}>{tx.clientNom}</td>
+                          <td className={tdClass}>{tx.description}</td>
+                          <td className={`${tdClass} text-right font-semibold`}>{formatCurrency(tx.montant)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
-
-      {activeTab === 'transactionsNonFacturees' && (
-         <div className="bg-white p-4 md:p-6 rounded-lg shadow-md">
-            <h2 className="text-md font-semibold text-gray-700 mb-3">Transactions à Crédit Non Facturées</h2>
-             {transactionsCredit.length === 0 ? (
-                <p className="text-gray-500 italic">Aucune transaction à crédit non facturée pour le moment.</p>
-             ) : (
-                <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
-                            <tr>
-                                <th className={thClass}>Date</th>
-                                <th className={thClass}>Client</th>
-                                <th className={thClass}>Description</th>
-                                <th className={`${thClass} text-right`}>Montant</th>
-                            </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                        {transactionsCredit.map(tx => (
-                            <tr key={tx.id} className="hover:bg-purple-50/20">
-                                <td className={tdClass}>{format(new Date(tx.dateTransaction), 'dd/MM/yyyy HH:mm')}</td>
-                                <td className={`${tdClass} font-medium`}>{tx.clientNom}</td>
-                                <td className={tdClass}>{tx.description}</td>
-                                <td className={`${tdClass} text-right font-semibold`}>{formatCurrency(tx.montant)}</td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
-                </div>
-             )}
-         </div>
-      )}
-
-      {/* Placeholder pour Modal de Facturation */}
-      {/* {showFacturationModal && clientPourFacturation && (
-        <FacturationClientModal 
-            isOpen={showFacturationModal} 
-            onClose={() => { setShowFacturationModal(false); setClientPourFacturation(null); }}
-            client={clientPourFacturation}
-            transactionsNonFacturees={transactionsCredit.filter(tx => tx.clientId === clientPourFacturation.id)}
-            onFactureGeneree={() => { console.log('Facture Générée (simulée)'); setIsLoading(true); // Recharger données après facturation } }
-        />
-      )} */}
-
     </DashboardLayout>
   );
 };

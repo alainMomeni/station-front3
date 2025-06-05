@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import DashboardLayout from '../../layouts/DashboardLayout';
 import Spinner from '../../components/Spinner';
-import { FiFileText, FiPlusCircle, FiTrash2, FiSave, FiAlertCircle } from 'react-icons/fi';
+import { FiPlusCircle, FiTrash2, FiSave, FiAlertCircle } from 'react-icons/fi';
 import { format, addDays } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid'; // Pour générer des ID uniques pour les lignes
 import type { Fournisseur, ProduitSimple, LigneBonCommande, BonCommandeData } from '../../types/achats'; // Assurez-vous que le chemin est correct
@@ -182,7 +182,7 @@ const GerantBonsCommandePage: React.FC = () => {
     <DashboardLayout>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-xl md:text-2xl font-semibold text-gray-800 border-b-2 border-purple-600 inline-block pr-4 pb-1">
-          <FiFileText className="inline-block mr-2 mb-1 h-6 w-6" /> Créer un Bon de Commande
+           Créer un Bon de Commande
         </h1>
       </div>
 

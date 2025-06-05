@@ -51,6 +51,15 @@ import GerantCataloguePage from '../page/gerant/GerantCataloguePage';
 import GerantVentesPersonnelPage from '../page/gerant/GerantVentesPersonnelPage';
 import GerantRapportsActivitePage from '../types/GerantRapportsActivitePage';
 import GerantVentesCreditPage from '../page/gerant/GerantVentesCreditPage';
+import GerantMargesPage from '../page/gerant/GerantMargesPage';
+import GerantDepensesPage from '../page/gerant/GerantDepensesPage';
+import GerantConfigPage from '../page/gerant/GerantConfigPage';
+import GerantFacturationPage from '../page/gerant/GerantFacturationPage';
+import GerantPerfPersonnelPage from '../page/gerant/GerantPerfPersonnelPage';
+import GerantComptesUtilisateursPage from '../page/gerant/GerantComptesUtilisateursPage';
+import GerantGestionClientsPage from '../page/gerant/GerantGestionClientsPage';
+import GerantRelevesEntreprisesPage from '../page/gerant/GerantRelevesEntreprisesPage';
+import GerantReclamationsPage from '../page/gerant/GerantReclamationsPage';
 
 
 
@@ -115,7 +124,20 @@ const AppRoutes: React.FC = () => {
       <Route path="/gerant/ventes/personnel" element={<GerantVentesPersonnelPage />} />
       <Route path="/gerant/rapports/activite" element={<GerantRapportsActivitePage />} />   
       <Route path="/gerant/ventes/credit" element={<GerantVentesCreditPage />} />   
+      <Route path="/gerant/finance/marges" element={<GerantMargesPage />} />
+      <Route path="/gerant/finance/depenses" element={<GerantDepensesPage />} />
+      <Route path="/gerant/config/prix" element={<GerantConfigPage />} /> {/* Pour l'onglet prix carburant par défaut */}
+      <Route path="/gerant/config/seuils" element={<GerantConfigPage />} /> 
+      <Route path="/gerant/finance/facturation" element={<GerantFacturationPage />} />
+      <Route path="/gerant/personnel/performance" element={<GerantPerfPersonnelPage />} />
+      <Route path="/gerant/personnel/comptes" element={<GerantComptesUtilisateursPage />} /> 
+      <Route path="/gerant/clients/gestion" element={<GerantGestionClientsPage />} />
+      <Route path="/gerant/clients/releves" element={<GerantRelevesEntreprisesPage />} />
+      <Route path="/gerant/clients/reclamations" element={<GerantReclamationsPage />} />
       {/* ----- Page Non Trouvée (404) ----- */}
+
+
+
       <Route
         path="*"
         element={
