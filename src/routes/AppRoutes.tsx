@@ -60,6 +60,12 @@ import GerantComptesUtilisateursPage from '../page/gerant/GerantComptesUtilisate
 import GerantGestionClientsPage from '../page/gerant/GerantGestionClientsPage';
 import GerantRelevesEntreprisesPage from '../page/gerant/GerantRelevesEntreprisesPage';
 import GerantReclamationsPage from '../page/gerant/GerantReclamationsPage';
+import GerantPlansMaintenancePage from '../page/gerant/GerantMaintenancePage';
+import GerantMaintenancePage from '../page/gerant/GerantMaintenancePage';
+import GerantAffectationPage from '../page/gerant/GerantAffectationPage';
+import GerantGestionPompesPage from '../page/gerant/GerantGestionPompesPage';
+import GerantGestionCuvesPage from '../page/gerant/GerantGestionCuvesPage';
+import GerantLogsActivitePage from '../page/gerant/GerantLogsActivitePage';
 
 
 
@@ -134,7 +140,13 @@ const AppRoutes: React.FC = () => {
       <Route path="/gerant/clients/gestion" element={<GerantGestionClientsPage />} />
       <Route path="/gerant/clients/releves" element={<GerantRelevesEntreprisesPage />} />
       <Route path="/gerant/clients/reclamations" element={<GerantReclamationsPage />} />
-      {/* ----- Page Non Trouvée (404) ----- */}
+      <Route path="/gerant/maintenance/suivi" element={<GerantMaintenancePage />} />
+      <Route path="/gerant/maintenance/plans" element={<GerantPlansMaintenancePage />} />
+      <Route path="/gerant/maintenance/affectations" element={<GerantAffectationPage />} />
+      <Route path="/gerant/equipements/pompes" element={<GerantGestionPompesPage />} /> 
+      <Route path="/gerant/equipements/cuves" element={<GerantGestionCuvesPage />} />
+      <Route path="/gerant/securite/logs" element={<GerantLogsActivitePage />} /> 
+               {/* ----- Page Non Trouvée (404) ----- */}
 
 
 
