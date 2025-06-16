@@ -4,6 +4,9 @@ import type { ClientProfessionnel, TransactionCredit } from './ventes';
 
 export type { ClientProfessionnel, TransactionCredit };
 
+// Add this type export
+export type StatutPaiementFacture = 'non_payee' | 'partiellement_payee' | 'payee' | 'en_retard' | 'annulee';
+
 export interface FactureClient {
   id: string; // Généré par le système
   numeroFacture: string;
@@ -17,7 +20,7 @@ export interface FactureClient {
   montantHT: number;
   montantTVA?: number;
   montantTTC: number;
-  statutPaiement: 'non_payee' | 'partiellement_payee' | 'payee' | 'en_retard' | 'annulee';
+  statutPaiement: StatutPaiementFacture; // Use the new type
   notes?: string;
   urlPdf?: string; // Lien vers le PDF généré
   dateCreation?: string;

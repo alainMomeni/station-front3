@@ -1,7 +1,7 @@
 // src/components/modals/PlanMaintenanceFormModal.tsx
 import React, { useState, useEffect } from 'react';
 import { FiSave, FiX, FiClipboard, FiRefreshCw, FiCalendar } from 'react-icons/fi';
-import type { PlanMaintenance, Equipement, FrequenceMaintenance } from '../../types/maintenance';
+import type { PlanMaintenance, Equipement, FrequencePlan } from '../../types/maintenance';
 import Spinner from '../Spinner';
 import { format } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
@@ -14,10 +14,12 @@ interface PlanMaintenanceFormModalProps {
   equipementsDisponibles: Equipement[];
 }
 
-const frequenceOptions: { value: FrequenceMaintenance; label: string }[] = [
-    { value: 'hebdomadaire', label: 'Hebdomadaire'}, { value: 'mensuel', label: 'Mensuel'},
-    { value: 'trimestriel', label: 'Trimestriel'}, { value: 'semestriel', label: 'Semestriel'},
-    { value: 'annuel', label: 'Annuel'},
+const frequenceOptions: { value: FrequencePlan; label: string }[] = [
+    { value: 'hebdomadaire', label: 'Hebdomadaire'},
+    { value: 'mensuel', label: 'Mensuel'},
+    { value: 'trimestriel', label: 'Trimestriel'},
+    { value: 'semestriel', label: 'Semestriel'},
+    { value: 'annuel', label: 'Annuel'}
 ];
 
 const PlanMaintenanceFormModal: React.FC<PlanMaintenanceFormModalProps> = ({ isOpen, onClose, onSave, planInitial, equipementsDisponibles }) => {

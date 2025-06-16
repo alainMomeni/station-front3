@@ -1,9 +1,11 @@
 // src/types/maintenance.ts
 
+import type { ReactNode } from "react";
+
 export type StatutIntervention = 'planifiee' | 'en_cours' | 'terminee' | 'annulee' | 'en_attente_pieces';
 export type TypeIntervention = 'preventive' | 'curative';
 export type PrioriteIntervention = 'basse' | 'moyenne' | 'haute' | 'urgente';
-export type FrequenceMaintenance = 'hebdomadaire' | 'mensuel' | 'trimestriel' | 'semestriel' | 'annuel';
+export type FrequencePlan = 'hebdomadaire' | 'mensuel' | 'trimestriel' | 'semestriel' | 'annuel';
 
 
 // Une interface simplifiée pour représenter les équipements
@@ -14,6 +16,7 @@ export interface Equipement {
 }
 
 export interface InterventionMaintenance {
+  description?: ReactNode; // <-- FIX: Rendu optionnel avec '?'
   id: string; // Numéro de ticket/d'intervention
   dateCreation: string; // ISO String
   equipementId: string;
@@ -41,20 +44,21 @@ export interface PlanMaintenance {
   // Simplification : au lieu d'une relation N-N, on peut avoir un champ catégorie ou une liste d'ID texte
   ciblesIds: string[]; // Ex: ['POMPE_01', 'POMPE_02']
   ciblesNoms?: string; // Pour affichage
-  frequence: FrequenceMaintenance;
+  frequence: FrequencePlan; // Updated type
   dateDebutCycle: string; // YYYY-MM-DD: Première fois où la maintenance doit être faite
   prochaineEcheance?: string; // Calculé par le backend : dateDebutCycle + frequence
   estActif: boolean;
   assigneParDefautA?: string;
 }
 
-// Pour les plans (V2)
-// export interface PlanMaintenance {
-//   id: string;
-//   nomPlan: string;
-//   equipementsCiblesIds: string[];
-//   descriptionTaches: string;
-//   frequence: 'journalier' | 'hebdomadaire' | 'mensuel' | 'trimestriel' | 'annuel';
-//   prochaineEcheance: string; // YYYY-MM-DD
-//   estActif: boolean;
-// }
+export interface SignalementMaterielFormData {
+    typeEquipement: string;
+    localisation: string; 
+    descriptionProbleme: string;
+    priorite: 'basse' | 'moyenne' | 'haute' | 'critique';
+    photo: File | null;
+    dateSignalement: string;
+    rapporteurId: string;
+    rapporteurNom: string;
+    statutTicket: 'ouvert' | 'en_cours' | 'resolu' | 'rejete';
+}

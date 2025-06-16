@@ -16,10 +16,15 @@ export interface ClientBase {
 }
 
 export interface ClientParticulier extends ClientBase {
+  id: string;
   typeClient: 'particulier';
-  prenom?: string;
-  nomFamille?: string;
-  immatriculations?: string[]; // Plaques d'immatriculation
+  nomAffichage: string;
+  nomFamille: string;  // Changed from 'nom' to 'nomFamille' for clarity
+  prenom: string;
+  statutCompte: StatutClient;
+  email?: string;
+  telephone: string;
+  derniereActiviteDate: string;
 }
 
 export interface ClientProfessionnel extends ClientBase {

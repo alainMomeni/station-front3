@@ -1,4 +1,3 @@
-
 export interface VenteEmployeDetail {
   id: string; // ID de la transaction
   heure: string; // HH:mm
@@ -32,6 +31,9 @@ export interface EmployeSimple {
   rolePrincipal: 'pompiste' | 'caissier' | 'chef_de_piste' | 'polyvalent';
 }
 
+// Add this type export
+export type StatutCompteClient = 'actif' | 'bloque' | 'inactif';
+
 export interface ClientProfessionnel {
   id: string;
   nomEntreprise: string;
@@ -41,7 +43,7 @@ export interface ClientProfessionnel {
   adresseFacturation?: string;
   limiteCredit: number; // En XAF
   soldeActuel: number;   // Montant actuellement dû par le client (positif si le client doit, négatif si crédit)
-  statutCompte?: 'actif' | 'bloque' | 'inactif'; // Bloqué si limite dépassée ou autre raison
+  statutCompte: StatutCompteClient; // Use the new type
   derniereFactureDate?: string; // YYYY-MM-DD
   derniereFactureMontant?: number;
 }
@@ -56,4 +58,27 @@ export interface TransactionCredit {
   referenceBC?: string; // Si liée à un bon de commande interne
   estFacturee: boolean;
   factureId?: string; // Si déjà facturée
+}
+
+export interface QuartTravail {
+  id: string;
+  libelle: string; // Ex: "Matin (07h-15h) - 15/07/2024" ou "Quart Actuel" 
+  dateDebut: string; // ISOString
+  dateFin: string;   // ISOString
+  statut?: 'en_cours' | 'termine' | 'planifie';
+}
+
+export interface VenteDirecte {
+  id: string;
+  date: string; // ISO date string
+  produit: string;
+  quantite: number;
+  unite: string;
+  prixUnitaire: number;
+  montantTotal: number;
+  modePaiement: 'Espèces' | 'Carte' | 'Mobile Money' | 'Autre';
+  pompiste: string;
+  pompe: string;
+  client?: string;
+  remise?: number;
 }

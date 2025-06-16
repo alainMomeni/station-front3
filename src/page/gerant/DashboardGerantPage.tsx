@@ -1,52 +1,116 @@
-// src/page/gerant/DashboardGerantPage.tsx
+// src/page/gerant/DashboardGerantPage.tsx (FINAL & COHÉRENT)
 import React from 'react';
-import DashboardLayout from '../../layouts/DashboardLayout'; // Ajustez le chemin relatif si besoin
 import { Link } from 'react-router-dom';
+import { FiGrid, FiTrendingUp, FiAlertTriangle, FiTool, FiBarChart2, FiUsers, FiDollarSign, FiShield } from 'react-icons/fi';
+
+// Écosystème et UI Kit
+import DashboardLayout from '../../layouts/DashboardLayout';
+import { Card } from '../../components/ui/Card';
+import { StatCard } from '../../components/ui/StatCard'; // On réutilise notre composant clé !
+import { Button } from '../../components/ui/Button';
+
 
 const DashboardGerantPage: React.FC = () => {
   return (
     <DashboardLayout>
-      <h1 className="text-2xl font-semibold text-gray-800 mb-6">
-        Tableau de Bord Global - Gérant
-      </h1>
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <p className="text-gray-700 mb-4">
-          Bienvenue, Gérant. Ce tableau de bord vous offre une vue d'ensemble des indicateurs clés
-          de performance de la station, des finances, de la gestion des stocks et du personnel.
-        </p>
-        {/* Contenu spécifique au dashboard du Gérant (indicateurs, graphiques, etc.) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {/* Exemples de cartes KPI pour le gérant */}
-            <div className="bg-blue-50 p-4 rounded-lg shadow">
-                <h3 className="text-blue-700 font-semibold">Chiffre d'Affaires (Mois en cours)</h3>
-                <p className="text-2xl font-bold text-blue-800">XAF 15.2M</p>
-                <p className="text-xs text-green-600">+5% vs. Mois N-1</p>
+      <div className="space-y-6">
+        {/* === En-tête de Page Standardisé === */}
+        <div className="flex items-center">
+            <div className="p-3 bg-purple-600 rounded-2xl shadow-lg mr-4">
+                <FiGrid className="text-white text-2xl" />
             </div>
-            <div className="bg-green-50 p-4 rounded-lg shadow">
-                <h3 className="text-green-700 font-semibold">Marge Brute (Mois en cours)</h3>
-                <p className="text-2xl font-bold text-green-800">XAF 3.1M</p>
-                <p className="text-xs text-green-600">Objectif: XAF 3.5M</p>
-            </div>
-            <div className="bg-yellow-50 p-4 rounded-lg shadow">
-                <h3 className="text-yellow-700 font-semibold">Alertes Stock Basses</h3>
-                <p className="text-2xl font-bold text-yellow-800">3 Cuves / 5 Produits</p>
-                <p className="text-xs text-yellow-600">Nécessitent réapprovisionnement</p>
-            </div>
-             <div className="bg-red-50 p-4 rounded-lg shadow">
-                <h3 className="text-red-700 font-semibold">Tickets Maintenance Ouverts</h3>
-                <p className="text-2xl font-bold text-red-800">2 Critiques</p>
-                <p className="text-xs text-red-600">Dont 1 depuis {'>'} 24h</p>
+            <div>
+                <h1 className="text-3xl font-bold text-gray-800">Tableau de Bord Global</h1>
+                <p className="text-gray-600">Bienvenue, M. Diallo. Voici un aperçu de l'activité de votre station.</p>
             </div>
         </div>
-        <div className="mt-8">
-            <h3 className="text-lg font-semibold text-gray-700 mb-4">Autres Raccourcis Gérant:</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                <Link to="/gerant/rapports/activite" className="p-3 bg-gray-100 rounded-md hover:bg-gray-200 text-center">Rapports d'Activité</Link>
-                <Link to="/gerant/personnel/comptes" className="p-3 bg-gray-100 rounded-md hover:bg-gray-200 text-center">Gestion Utilisateurs</Link>
-                <Link to="/gerant/config/prix" className="p-3 bg-gray-100 rounded-md hover:bg-gray-200 text-center">Configuration Prix</Link>
-                <Link to="/gerant/securite/logs" className="p-3 bg-gray-100 rounded-md hover:bg-gray-200 text-center">Logs Système</Link>
-            </div>
+
+        {/* === Section des KPIs === */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+            <StatCard 
+                variant="primary" 
+                icon={FiTrendingUp} 
+                title="CA (Mois en cours)"
+                value="15.2M"
+                unit="XAF"
+                footer={<span className="text-xs text-green-600">+5% vs. Mois N-1</span>}
+            />
+             <StatCard 
+                variant="success"
+                icon={FiDollarSign} 
+                title="Marge Brute (Mois)"
+                value="3.1M"
+                unit="XAF"
+                footer={<span className="text-xs text-gray-500">Objectif: 3.5M</span>}
+            />
+            <StatCard 
+                variant="warning"
+                icon={FiAlertTriangle} 
+                title="Alertes Stock Bas"
+                value="8"
+                unit="articles"
+                footer={<span className="text-xs text-yellow-600">3 Cuves / 5 Produits</span>}
+            />
+            <StatCard 
+                variant="error"
+                icon={FiTool} 
+                title="Maintenance Active"
+                value="2"
+                unit="tickets ouverts"
+                footer={<span className="text-xs text-red-600">Dont 1 critique {'>'} 24h</span>}
+            />
         </div>
+
+        {/* === Section des Accès Rapides === */}
+        <Card title="Accès Rapides" icon={FiGrid}>
+             <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                 <Link to="/gerant/rapports/activite">
+                    <Button variant="secondary" className="w-full h-full text-left justify-start p-4">
+                        <FiBarChart2 className="mr-3 h-5 w-5"/>
+                        <div>
+                            <div className="font-semibold">Rapports</div>
+                            <div className="text-xs font-normal">Générer les analyses</div>
+                        </div>
+                    </Button>
+                 </Link>
+                 <Link to="/gerant/personnel/comptes">
+                     <Button variant="secondary" className="w-full h-full text-left justify-start p-4">
+                        <FiUsers className="mr-3 h-5 w-5"/>
+                        <div>
+                            <div className="font-semibold">Utilisateurs</div>
+                            <div className="text-xs font-normal">Gérer les comptes</div>
+                        </div>
+                    </Button>
+                 </Link>
+                 <Link to="/gerant/config/prix">
+                     <Button variant="secondary" className="w-full h-full text-left justify-start p-4">
+                        <FiDollarSign className="mr-3 h-5 w-5"/>
+                         <div>
+                            <div className="font-semibold">Prix & Marges</div>
+                            <div className="text-xs font-normal">Configurer les tarifs</div>
+                        </div>
+                    </Button>
+                 </Link>
+                 <Link to="/gerant/securite/logs">
+                     <Button variant="secondary" className="w-full h-full text-left justify-start p-4">
+                        <FiShield className="mr-3 h-5 w-5"/>
+                        <div>
+                            <div className="font-semibold">Logs Système</div>
+                            <div className="text-xs font-normal">Auditer les activités</div>
+                        </div>
+                    </Button>
+                 </Link>
+             </div>
+        </Card>
+        
+        {/* Une section pour les graphiques pourrait venir ici */}
+        <Card title="Évolution du Chiffre d'Affaires" icon={FiTrendingUp}>
+            <div className="p-6">
+                <p className="text-center text-gray-500 italic">(Zone réservée pour un graphique des ventes sur 30 jours)</p>
+                {/* Ici, on intégrerait un composant de graphique, par exemple avec Recharts */}
+            </div>
+        </Card>
+
       </div>
     </DashboardLayout>
   );

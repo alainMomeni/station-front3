@@ -161,8 +161,7 @@ const gerantMenu: NavItem[] = [
         icon: FiTool,
         subItems: [
             { name: 'Plans de Maintenance', href: '/gerant/maintenance/plans', icon: FiClipboard },
-            { name: 'Suivi Maintenance', href: '/gerant/maintenance/suivi', icon: FiCalendar },
-            { name: 'Affectations', href: '/chef-de-piste/affectations', icon: FiUsers },
+            { name: 'Affectations', href: '/gerant/maintenance/affectations', icon: FiUsers },
             { name: 'Gestion des Pompes', href: '/gerant/equipements/pompes', icon: FiZap },
             { name: 'Gestion des Cuves', href: '/gerant/equipements/cuves', icon: FiHardDrive },
         ]

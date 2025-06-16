@@ -19,7 +19,7 @@ export interface RapportMargesResultat {
   totalGlobalChiffreAffaires: number;
   totalGlobalCoutAchat: number;
   totalGlobalMargeBrute: number;
-  tauxMorgenBruteGlobal: number; // En %
+  tauxMargeBruteGlobal: number; // FIX: Correction de la coquille Morgen -> Marge
   // Pour Marge Nette (V2)
   totalCoutsOperationnels?: number;
   totalGlobalMargeNette?: number;
