@@ -5,8 +5,7 @@ import { format } from 'date-fns';
 
 // ... (imports inchangés)
 import type { ClientProfessionnel, TransactionCredit } from '../../types/ventes';
-import { dummyClientsPro, dummyTransactionsCreditNonFacturees } from '../../_mockData/ventesCredit'; 
-import DashboardLayout from '../../layouts/DashboardLayout';
+import { dummyClientsPro, dummyTransactionsCreditNonFacturees } from '../../_mockData/ventesCredit';
 import Spinner from '../../components/Spinner';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card'; // Utilise maintenant la version corrigée
@@ -87,7 +86,7 @@ const GerantVentesCreditPage: React.FC = () => {
     
     // Rendu
     return (
-        <DashboardLayout>
+        <>
             <div className="space-y-6">
                 <div className="flex items-center">
                     <div className="p-3 bg-purple-600 rounded-2xl shadow-lg mr-4">
@@ -113,7 +112,7 @@ const GerantVentesCreditPage: React.FC = () => {
                     }
                 </Card>
             </div>
-        </DashboardLayout>
+        </>
     );
 };
 

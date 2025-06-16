@@ -7,7 +7,6 @@ import type { UtilisateurSysteme, RoleType, StatutCompteUtilisateur } from '../.
 import { dummyUtilisateursData, rolesPourFiltre, generateNomComplet } from '../../_mockData/personnel';
 
 // Import components
-import DashboardLayout from '../../layouts/DashboardLayout';
 import { Card } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
@@ -123,7 +122,7 @@ const GerantConfigPage: React.FC = () => {
 
     // --- Rendu ---
     return (
-        <DashboardLayout>
+
             <div className="space-y-6">
                 <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                      <div className="flex items-center">
@@ -158,7 +157,7 @@ const GerantConfigPage: React.FC = () => {
                     )}
                 </Card>
             </div>
-        </DashboardLayout>
+
     );
 };
 

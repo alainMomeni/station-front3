@@ -4,7 +4,6 @@ import { FiAlertOctagon, FiEdit2, FiSave, FiFilter, FiDroplet, FiDollarSign } fr
 import { format, startOfDay, parseISO } from 'date-fns';
 
 // Écosystème et UI Kit
-import DashboardLayout from '../../layouts/DashboardLayout';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
@@ -73,7 +72,7 @@ const SignalementEcartsChefDePistePage: React.FC = () => {
     };
 
     return (
-        <DashboardLayout>
+        <>
             <div className="space-y-6">
                 <div className="flex items-center">
                     <div className="p-3 bg-purple-600 rounded-2xl shadow-lg mr-4">
@@ -207,7 +206,7 @@ const SignalementEcartsChefDePistePage: React.FC = () => {
                     </form>
                  )}
             </div>
-        </DashboardLayout>
+        </>
     );
 };
 

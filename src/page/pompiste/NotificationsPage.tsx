@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import DashboardLayout from '../../layouts/DashboardLayout';
 import { FiBell, FiTrash2, FiEye, FiCheckCircle, FiInfo, FiAlertTriangle as FiAlertTriangleIcon } from 'react-icons/fi'; // Renamed one FiAlertTriangle for clarity if needed elsewhere
 
 interface Notification {
@@ -61,7 +60,7 @@ const NotificationsPage: React.FC = () => {
   };
 
   return (
-    <DashboardLayout>
+    <>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold text-gray-800 border-b-2 border-purple-600 inline-block pr-4 pb-1">
           Mes Notifications
@@ -121,7 +120,7 @@ const NotificationsPage: React.FC = () => {
           })}
         </div>
       )}
-    </DashboardLayout>
+    </>
   );
 };
 

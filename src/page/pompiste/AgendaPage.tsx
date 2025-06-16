@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isSameDay } from 'date-fns'; // Removed getDay, parseISO if not directly used for now
 import { fr } from 'date-fns/locale';
-import DashboardLayout from '../../layouts/DashboardLayout';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 // ** Import the modal component **
 import ShiftDetailModal from '../../components/ShiftDetailModal';
@@ -67,7 +66,7 @@ const AgendaPage: React.FC = () => {
     };
 
     return (
-        <DashboardLayout>
+        <>
             <div className="mb-6">
                 <h1 className="text-2xl font-semibold text-gray-800 border-b-2 border-purple-600 inline-block pr-4 pb-1">
                     Mon Planning
@@ -165,7 +164,7 @@ const AgendaPage: React.FC = () => {
                 onClose={closeModal}
                 selectedDate={selectedDateForModal}
             />
-        </DashboardLayout>
+        </>
     );
 };
 

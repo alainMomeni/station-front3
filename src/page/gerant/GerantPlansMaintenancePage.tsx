@@ -7,7 +7,6 @@ import { format, parseISO } from 'date-fns';
 import type { InterventionMaintenance, PlanMaintenance } from '../../types/maintenance';
 
 // Écosystème et UI Kit
-import DashboardLayout from '../../layouts/DashboardLayout';
 import Spinner from '../../components/Spinner';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
@@ -52,7 +51,7 @@ const GerantMaintenancePage: React.FC = () => {
     const interventionColumns = getInterventionColumns(() => { /* handle edit */ });
 
     return (
-        <DashboardLayout>
+        <>
             <div className="space-y-6">
                 <div className="flex items-center">
                     <div className="p-3 bg-purple-600 rounded-2xl shadow-lg mr-4"><FiTool className="text-white text-2xl" /></div>
@@ -89,7 +88,7 @@ const GerantMaintenancePage: React.FC = () => {
             </div>
             
             {/* ... Modales (Intervention & Plan) ... */}
-        </DashboardLayout>
+        </>
     );
 };
 

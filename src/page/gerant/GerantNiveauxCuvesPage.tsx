@@ -4,7 +4,6 @@ import { FiDroplet, FiFilter, FiClipboard } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
 // Ecosystème et composants UI
-import DashboardLayout from '../../layouts/DashboardLayout';
 import Spinner from '../../components/Spinner';
 import { Card } from '../../components/ui/Card';
 import { Select } from '../../components/ui/Select';
@@ -92,7 +91,7 @@ const GerantNiveauxCuvesPage: React.FC = () => {
     }, [cuves, filtreCarburant, filtreStatut]);
 
     return (
-        <DashboardLayout>
+        <>
             <div className="space-y-6">
                 <div className="flex items-center">
                     <div className="p-3 bg-purple-600 rounded-2xl shadow-lg mr-4"><FiDroplet className="text-white text-2xl" /></div>
@@ -131,7 +130,7 @@ const GerantNiveauxCuvesPage: React.FC = () => {
                     </>
                 )}
             </div>
-        </DashboardLayout>
+        </>
     );
 };
 

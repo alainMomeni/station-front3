@@ -6,7 +6,6 @@ import { format, startOfDay, addDays, subDays, parseISO } from 'date-fns';
 // Types, Mocks et Composants
 import type { SuiviPresenceEmploye, StatutPresence } from '../../types/personnel';
 import { generateDummyQuartsPourDate, fetchPersonnelAffecteEtPresence } from '../../_mockData/presences';
-import DashboardLayout from '../../layouts/DashboardLayout';
 import Spinner from '../../components/Spinner';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
@@ -106,7 +105,7 @@ const SuiviPresencesPage: React.FC = () => {
     const handleSubmitPresences = async () => { /*...*/ };
     
     return (
-        <DashboardLayout>
+        <>
             <div className="space-y-6">
                 <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                      <div className="flex items-center">
@@ -161,7 +160,7 @@ const SuiviPresencesPage: React.FC = () => {
                  </form>
                 }
             </div>
-        </DashboardLayout>
+        </>
     );
 };
 

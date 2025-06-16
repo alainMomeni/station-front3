@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { FiGrid, FiTrendingUp, FiAlertTriangle, FiTool, FiBarChart2, FiUsers, FiDollarSign, FiShield } from 'react-icons/fi';
 
 // Écosystème et UI Kit
-import DashboardLayout from '../../layouts/DashboardLayout';
 import { Card } from '../../components/ui/Card';
 import { StatCard } from '../../components/ui/StatCard'; // On réutilise notre composant clé !
 import { Button } from '../../components/ui/Button';
@@ -12,7 +11,7 @@ import { Button } from '../../components/ui/Button';
 
 const DashboardGerantPage: React.FC = () => {
   return (
-    <DashboardLayout>
+
       <div className="space-y-6">
         {/* === En-tête de Page Standardisé === */}
         <div className="flex items-center">
@@ -112,7 +111,7 @@ const DashboardGerantPage: React.FC = () => {
         </Card>
 
       </div>
-    </DashboardLayout>
+
   );
 };
 

@@ -9,7 +9,6 @@ import type { ReleveCompteClient, LigneReleveClient } from '../../types/clients'
 import { dummyClientsProData, fetchRelevePourClientEtPeriode } from '../../_mockData/releves';
 
 // Écosystème et UI Kit
-import DashboardLayout from '../../layouts/DashboardLayout';
 import Spinner from '../../components/Spinner';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
@@ -61,7 +60,7 @@ const GerantRelevesEntreprisesPage: React.FC = () => {
     const tableColumns = getReleveColumns();
 
     return (
-        <DashboardLayout>
+        <>
             <div className="space-y-6">
                 <div className="flex items-center">
                     <div className="p-3 bg-purple-600 rounded-2xl shadow-lg mr-4">
@@ -120,7 +119,7 @@ const GerantRelevesEntreprisesPage: React.FC = () => {
                 )}
 
             </div>
-        </DashboardLayout>
+        </>
     );
 };
 

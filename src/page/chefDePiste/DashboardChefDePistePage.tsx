@@ -14,7 +14,6 @@ import {
 } from 'react-icons/fi';
 
 // Écosystème et UI Kit
-import DashboardLayout from '../../layouts/DashboardLayout';
 import { Card } from '../../components/ui/Card';
 import { StatCard } from '../../components/ui/StatCard'; // On réutilise massivement notre StatCard !
 import { Button } from '../../components/ui/Button';
@@ -47,7 +46,7 @@ const topCarburantsData = [
 const DashboardChefDePistePage: React.FC = () => {
 
   return (
-    <DashboardLayout>
+    <>
       <div className="space-y-6">
         <div className="flex items-center">
             <div className="p-3 bg-purple-600 rounded-2xl shadow-lg mr-4">
@@ -141,7 +140,7 @@ const DashboardChefDePistePage: React.FC = () => {
          </div>
 
       </div>
-    </DashboardLayout>
+    </>
   );
 };
 

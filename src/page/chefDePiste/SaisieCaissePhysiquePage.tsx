@@ -7,7 +7,6 @@ import { fetchCaissesPourQuartEtDate } from '../../_mockData/saisies';
 // Types, Mocks et Composants (inchangés)
 import type { CaissePourSaisie } from '../../types/saisies';
 import { generateDummyQuartsPourDate } from '../../_mockData/saisies';
-import DashboardLayout from '../../layouts/DashboardLayout';
 import Spinner from '../../components/Spinner';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
@@ -131,7 +130,7 @@ const SaisieCaissePhysiquePage: React.FC = () => {
     }
 
     return (
-        <DashboardLayout>
+        <>
             <div className="space-y-6">
                 <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                      <div className="flex items-center">
@@ -201,7 +200,7 @@ const SaisieCaissePhysiquePage: React.FC = () => {
                     </div>
                 )}
             </div>
-        </DashboardLayout>
+        </>
     );
 };
 

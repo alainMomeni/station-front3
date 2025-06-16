@@ -8,7 +8,6 @@ import type { LogActivite, LogActionType } from '../../types/logs';
 import { dummyLogsData, dummyUtilisateursLog, logActionTypes } from '../../_mockData/logs';
 
 // Écosystème et UI Kit
-import DashboardLayout from '../../layouts/DashboardLayout';
 import Spinner from '../../components/Spinner';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
@@ -70,7 +69,7 @@ const GerantLogsActivitePage: React.FC = () => {
     const tableColumns = getLogColumns(handleVoirDetailsLog);
 
     return (
-        <DashboardLayout>
+        <>
             <div className="space-y-6">
                 <div className="flex items-center">
                     <div className="p-3 bg-purple-600 rounded-2xl shadow-lg mr-4">
@@ -112,7 +111,7 @@ const GerantLogsActivitePage: React.FC = () => {
                     }
                 </Card>
             </div>
-        </DashboardLayout>
+        </>
     );
 };
 

@@ -8,7 +8,6 @@ import type { ClientPourFacturation, TransactionCredit, FactureClient } from '..
 import { dummyClientsProData, dummyTransactionsCreditData, dummyFacturesClientData } from '../../_mockData/facturation';
 
 // Écosystème de l'application
-import DashboardLayout from '../../layouts/DashboardLayout';
 import Spinner from '../../components/Spinner';
 
 // Composants UI et métier
@@ -113,7 +112,7 @@ const GerantFacturationPage: React.FC = () => {
 
     // --- Rendu de la page ---
     return (
-        <DashboardLayout>
+        <>
             <div className="space-y-6">
                 <div className="flex items-center">
                     <div className="p-3 bg-purple-600 rounded-2xl shadow-lg mr-4">
@@ -193,7 +192,7 @@ const GerantFacturationPage: React.FC = () => {
                 transactionsAInclureInitiales={transactionsCredit.filter(tx => !tx.estFacturee && tx.clientId === clientPourFacturation?.id)}
                 onFactureGeneree={handleSaveFacture}
             />
-        </DashboardLayout>
+        </>
     );
 };
 

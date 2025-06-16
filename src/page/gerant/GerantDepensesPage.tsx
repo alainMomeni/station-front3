@@ -8,7 +8,6 @@ import type { DepenseData } from '../../types/finance';
 import { dummyCategoriesDepense, dummyDepenses } from '../../_mockData/depenses'; // Simuler import dédié
 
 // Écosystème et UI Kit
-import DashboardLayout from '../../layouts/DashboardLayout';
 import Spinner from '../../components/Spinner';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
@@ -87,7 +86,7 @@ const GerantDepensesPage: React.FC = () => {
     const tableColumns = getDepensesColumns(handleOpenModal, handleDeleteDepense);
     
     return (
-        <DashboardLayout>
+        <>
             <div className="space-y-6">
                 <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                     <div className="flex items-center">
@@ -135,7 +134,7 @@ const GerantDepensesPage: React.FC = () => {
                 depenseInitiale={depenseEnEdition}
                 categoriesDepense={dummyCategoriesDepense}
             />
-        </DashboardLayout>
+        </>
     );
 };
 

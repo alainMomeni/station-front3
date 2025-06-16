@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import DashboardLayout from '../../layouts/DashboardLayout';
 import Spinner from '../../components/Spinner'; // Import Spinner
 import { FiSend, FiCalendar, FiEdit2, FiAlertCircle } from 'react-icons/fi';
 
@@ -56,7 +55,7 @@ const SignalerAbsencePage: React.FC = () => {
     };
 
     return (
-        <DashboardLayout>
+        <>
             <h1 className="text-2xl font-semibold text-gray-800 border-b-2 border-purple-600 inline-block pr-4 pb-1 mb-6">
                 Signaler une Absence
             </h1>
@@ -174,7 +173,7 @@ const SignalerAbsencePage: React.FC = () => {
                     </div>
                 </form>
             </div>
-        </DashboardLayout>
+        </>
     );
 };
 

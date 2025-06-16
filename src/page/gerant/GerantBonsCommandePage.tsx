@@ -6,7 +6,6 @@ import { FiPlusCircle, FiTrash2, FiSave, FiPackage, FiUser, FiShoppingCart, FiFi
 import type { Fournisseur, ProduitSimple, LigneBonCommande, BonCommandeData } from '../../types/achats';
 
 // Import de l'écosystème
-import DashboardLayout from '../../layouts/DashboardLayout';
 import Spinner from '../../components/Spinner';
 
 // Import de nos composants UI réutilisables
@@ -246,11 +245,10 @@ const GerantBonsCommandePage: React.FC = () => {
     };
 
     if (isLoading) {
-        return <DashboardLayout><div className="flex justify-center p-20"><Spinner size="lg" /></div></DashboardLayout>;
+        return <div className="flex justify-center p-20"><Spinner size="lg" /></div>;
     }
 
     return (
-        <DashboardLayout>
             <div className="space-y-6">
                 <div className="flex items-center">
                     <div className="p-3 bg-purple-600 rounded-2xl shadow-lg mr-4">
@@ -279,7 +277,6 @@ const GerantBonsCommandePage: React.FC = () => {
                     <RecapitulatifBC totalHT={totalHTCommande} isSubmitting={isSubmitting} />
                 </form>
             </div>
-        </DashboardLayout>
     );
 };
 

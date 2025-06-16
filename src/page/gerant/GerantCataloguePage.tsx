@@ -7,7 +7,6 @@ import type { ProduitCatalogueComplet, CategorieProduit } from '../../types/cata
 import { dummyProduitsCatalogueData, dummyCategoriesData } from '../../_mockData/catalogue'; // Simule import
 
 // Composants de l'écosystème
-import DashboardLayout from '../../layouts/DashboardLayout';
 import Spinner from '../../components/Spinner';
 
 // Composants UI réutilisables
@@ -213,7 +212,6 @@ const GerantCataloguePage: React.FC = () => {
     
     // Rendu de la page
     return (
-        <DashboardLayout>
             <div className="space-y-6">
 
 
@@ -319,7 +317,6 @@ const GerantCataloguePage: React.FC = () => {
                     />
                 )}
             </div>
-        </DashboardLayout>
     );
 };
 

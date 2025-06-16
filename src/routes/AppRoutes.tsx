@@ -49,7 +49,7 @@ import GerantSuiviLivraisonsPage from '../page/gerant/GerantSuiviLivraisonsPage'
 import GerantStocksProduitsPage from '../page/gerant/GerantStocksProduitsPage';
 import GerantCataloguePage from '../page/gerant/GerantCataloguePage';
 import GerantVentesPersonnelPage from '../page/gerant/GerantVentesPersonnelPage';
-import GerantRapportsActivitePage from '../types/GerantRapportsActivitePage';
+import GerantRapportsActivitePage from '../page/gerant/GerantRapportsActivitePage';
 import GerantVentesCreditPage from '../page/gerant/GerantVentesCreditPage';
 import GerantMargesPage from '../page/gerant/GerantMargesPage';
 import GerantDepensesPage from '../page/gerant/GerantDepensesPage';

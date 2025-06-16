@@ -8,7 +8,6 @@ import type { ClientData, ClientProfessionnel, TypeClient, StatutClient } from '
 import { dummyClientsData } from '../../_mockData/clients'; // Adapter import
 
 // Écosystème et UI Kit
-import DashboardLayout from '../../layouts/DashboardLayout';
 import Spinner from '../../components/Spinner';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
@@ -77,7 +76,7 @@ const GerantGestionClientsPage: React.FC = () => {
     const tableColumns = getClientColumns(handleVoirDetails, handleOpenModal, handleDeleteClient);
 
     return (
-        <DashboardLayout>
+        <>
             <div className="space-y-6">
                 <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                     <div className="flex items-center">
@@ -124,7 +123,7 @@ const GerantGestionClientsPage: React.FC = () => {
                     isCreationMode={!clientEnEdition}
                 />
             )}
-        </DashboardLayout>
+        </>
     );
 };
 

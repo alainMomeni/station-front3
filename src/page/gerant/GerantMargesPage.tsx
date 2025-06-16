@@ -8,7 +8,6 @@ import type { RapportMargesResultat, LigneAnalyseMarge } from '../../types/finan
 import { genererRapportMargesSimule, produitsEtCategoriesPourFiltre } from '../../_mockData/marges'; // Simuler import
 
 // Écosystème et UI Kit
-import DashboardLayout from '../../layouts/DashboardLayout';
 import Spinner from '../../components/Spinner';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
@@ -66,7 +65,7 @@ const GerantMargesPage: React.FC = () => {
 
     // --- Rendu ---
     return (
-        <DashboardLayout>
+        <>
             <div className="space-y-6">
                 <div className="flex items-center">
                     <div className="p-3 bg-purple-600 rounded-2xl shadow-lg mr-4">
@@ -121,7 +120,7 @@ const GerantMargesPage: React.FC = () => {
                     <Card><div className="text-center p-12 text-gray-500"><p>Sélectionnez vos critères et cliquez sur "Calculer les Marges" pour afficher l'analyse.</p></div></Card>
                 )}
             </div>
-        </DashboardLayout>
+        </>
     );
 };
 

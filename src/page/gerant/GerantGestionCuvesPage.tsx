@@ -7,7 +7,6 @@ import type { Cuve } from '../../types/equipements';
 import { dummyCuvesData, dummyTypesCarburant } from '../../_mockData/equipements';
 
 // Écosystème et UI Kit
-import DashboardLayout from '../../layouts/DashboardLayout';
 import Spinner from '../../components/Spinner';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
@@ -65,7 +64,7 @@ const GerantGestionCuvesPage: React.FC = () => {
     const tableColumns = getCuveColumns(handleOpenModal, handleDeleteCuve);
 
     return (
-        <DashboardLayout>
+        <>
             <div className="space-y-6">
                 <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                     <div className="flex items-center">
@@ -107,7 +106,7 @@ const GerantGestionCuvesPage: React.FC = () => {
                     typesCarburantDisponibles={dummyTypesCarburant}
                 />
             )}
-        </DashboardLayout>
+        </>
     );
 };
 

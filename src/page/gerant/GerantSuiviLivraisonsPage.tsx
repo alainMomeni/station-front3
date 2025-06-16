@@ -6,7 +6,6 @@ import { FiTruck } from 'react-icons/fi';
 import type { BonCommandeData, LigneBonCommande, InfoLivraison } from '../../types/achats';
 
 // Import de nos composants UI au lieu d'éléments HTML bruts
-import DashboardLayout from '../../layouts/DashboardLayout';
 import Spinner from '../../components/Spinner';
 import { Card } from '../../components/ui/Card'; // Changed to named import
 import LivraisonList from '../../components/suivi-livraisons/LivraisonList';
@@ -109,9 +108,9 @@ const GerantSuiviLivraisonsPage: React.FC = () => {
   
   if (selectedBC) {
     return (
-        <DashboardLayout>
+        <>
             <ReceptionForm bonDeCommande={selectedBC} infoLivraison={infoLivraison} onValider={handleValiderLivraison} onUpdateLigne={handleLigneReceptionChange} onUpdateInfo={handleInfoLivraisonChange} onAnnuler={() => setSelectedBC(null)} isProcessing={isProcessing} />
-        </DashboardLayout>
+        </>
     );
   }
 
@@ -125,7 +124,7 @@ const GerantSuiviLivraisonsPage: React.FC = () => {
   ];
   
   return (
-    <DashboardLayout>
+    <>
       <div className="space-y-6">
         <div className="flex items-center">
           <div className="p-3 bg-gradient-to-br from-purple-600 to-purple-700 rounded-2xl shadow-lg mr-4">
@@ -176,7 +175,7 @@ const GerantSuiviLivraisonsPage: React.FC = () => {
           </Card>
         )}
       </div>
-    </DashboardLayout>
+    </>
   );
 };
 

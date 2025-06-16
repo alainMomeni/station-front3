@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import type { ProduitStockDetail, ProduitStatutStock } from '../../types/stock';
 
 // Import de l'écosystème
-import DashboardLayout from '../../layouts/DashboardLayout';
 import Spinner from '../../components/Spinner';
 
 // Import de nos composants UI et des composants spécifiques
@@ -161,7 +160,7 @@ const GerantStocksProduitsPage: React.FC = () => {
   const valorisationTotaleStockVente = useMemo(() => produitsFiltres.reduce((acc, prod) => acc + (prod.stockActuel * (prod.prixVenteUnitaire || 0)), 0), [produitsFiltres]);
 
   return (
-    <DashboardLayout>
+    <>
       <div className="space-y-6">
         <div className="flex items-center">
             <div className="p-3 bg-purple-600 rounded-2xl shadow-lg mr-4">
@@ -201,7 +200,7 @@ const GerantStocksProduitsPage: React.FC = () => {
             </Card>
         )}
       </div>
-    </DashboardLayout>
+    </>
   );
 };
 

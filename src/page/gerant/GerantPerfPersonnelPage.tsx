@@ -8,7 +8,6 @@ import type { RecapPerformanceEmploye } from '../../types/personnel';
 import { dummyEmployesPourPerf, fetchRecapPerformancePersonnel } from '../../_mockData/personnel';
 
 // Écosystème et UI Kit
-import DashboardLayout from '../../layouts/DashboardLayout';
 import Spinner from '../../components/Spinner';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
@@ -81,7 +80,7 @@ const GerantPerfPersonnelPage: React.FC = () => {
 
     // --- Rendu de la page ---
     return (
-        <DashboardLayout>
+        <>
             <div className="space-y-6">
                 <div className="flex items-center">
                     <div className="p-3 bg-purple-600 rounded-2xl shadow-lg mr-4">
@@ -115,7 +114,7 @@ const GerantPerfPersonnelPage: React.FC = () => {
                     )}
                 </Card>
             </div>
-        </DashboardLayout>
+        </>
     );
 };
 

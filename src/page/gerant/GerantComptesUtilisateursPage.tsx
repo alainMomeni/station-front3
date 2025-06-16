@@ -1,6 +1,6 @@
 // src/page/gerant/GerantComptesUtilisateursPage.tsx
 import React, { useState, useEffect, useMemo } from 'react';
-import DashboardLayout from '../../layouts/DashboardLayout';
+
 import Spinner from '../../components/Spinner';
 import { FiUsers, FiPlusCircle, FiEdit, FiKey, FiToggleLeft, FiToggleRight, FiSearch, FiFilter, FiAlertCircle, FiX } from 'react-icons/fi';
 import type { UtilisateurSysteme, RoleType, StatutCompteUtilisateur } from '../../types/personnel'; // Adapter chemin
@@ -204,7 +204,7 @@ const GerantComptesUtilisateursPage: React.FC = () => {
   const thClass = "px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap";
 
   return (
-    <DashboardLayout>
+    <div>
         <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-6 gap-3">
             <h1 className="text-xl md:text-2xl font-semibold text-gray-800 border-b-2 border-purple-600 inline-block pr-4 pb-1 shrink-0">
                 <FiUsers className="inline-block mr-2 mb-1 h-6 w-6" /> Gestion des Comptes Utilisateurs
@@ -298,7 +298,7 @@ const GerantComptesUtilisateursPage: React.FC = () => {
                 isCreationMode={isCreationModeModal}
             />
         )}
-    </DashboardLayout>
+    </div>
   );
 };
 

@@ -12,7 +12,6 @@ import {
 } from '../../_mockData/ventes';
 
 // Écosystème de l'application (inchangé)
-import DashboardLayout from '../../layouts/DashboardLayout';
 import Spinner from '../../components/Spinner';
 
 // Composants UI (inchangés)
@@ -139,7 +138,7 @@ const GerantVentesPersonnelPage: React.FC = () => {
     
     // --- Le Rendu ---
     return (
-        <DashboardLayout>
+        <>
             <div className="space-y-6">
                 <div className="flex items-center">
                     <div className="p-3 bg-purple-600 rounded-2xl shadow-lg mr-4">
@@ -185,7 +184,7 @@ const GerantVentesPersonnelPage: React.FC = () => {
                 onClose={() => setShowDetailModal(false)}
                 performanceEmploye={selectedEmployePourDetail}
             />
-        </DashboardLayout>
+        </>
     );
 };
 

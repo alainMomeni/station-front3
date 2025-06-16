@@ -10,7 +10,6 @@ import { format, startOfDay, parseISO } from 'date-fns';
 // Types, Mocks et Composants (inchangés)
 import type { CuvePourSaisieIndex } from '../../types/saisies';
 import { generateDummyQuartsPourDate, fetchCuvesPourQuartEtDate } from '../../_mockData/saisies';
-import DashboardLayout from '../../layouts/DashboardLayout';
 import { Card } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
@@ -109,7 +108,7 @@ const SaisieIndexChefDePistePage: React.FC = () => {
     };
 
     return (
-        <DashboardLayout>
+        <>
             <div className="space-y-6">
                  <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                     <div className="flex items-center">
@@ -165,7 +164,7 @@ const SaisieIndexChefDePistePage: React.FC = () => {
                     </form>
                 }
             </div>
-        </DashboardLayout>
+        </>
     );
 };
 

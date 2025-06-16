@@ -7,7 +7,6 @@ import type { SignalementMaterielFormData } from '../../types/maintenance';
 const getChefDePisteConnecte = () => ({ id: 'CDP_001_AMINA_C', nomComplet: 'Amina C.' });
 
 // Écosystème et UI Kit
-import DashboardLayout from '../../layouts/DashboardLayout';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
@@ -71,7 +70,7 @@ const SignalementMaterielChefDePistePage: React.FC = () => {
     };
 
     return (
-        <DashboardLayout>
+        <>
             <div className="space-y-6">
                 <div className="flex items-center">
                     <div className="p-3 bg-purple-600 rounded-2xl shadow-lg mr-4">
@@ -118,7 +117,7 @@ const SignalementMaterielChefDePistePage: React.FC = () => {
                     </form>
                 </Card>
             </div>
-        </DashboardLayout>
+        </>
     );
 };
 
