@@ -2,42 +2,32 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuthContext } from '../contexts/AuthContext';
-import type { RoleType } from '../hooks/useAuth'; // <-- Bonne pratique : Importer le type
+import type { RoleType } from '../contexts/AuthContext'; // Import depuis le nouveau fichier
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  roles?: RoleType[]; // <-- Bonne pratique : Utiliser le type RoleType
+  roles?: RoleType[]; 
 }
 
-export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
-  children, 
-  roles 
-}) => {
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, roles }) => {
   const { user, isAuthenticated } = useAuthContext();
   const location = useLocation();
 
-  // FIX: On vérifie à la fois le statut d'authentification ET la présence de l'objet utilisateur.
-  // C'est la garde la plus sûre.
+  // 1. L'utilisateur n'est pas authentifié OU l'objet user n'existe pas.
+  // C'est la garde la plus importante. Si `logout()` est appelé,
+  // `isAuthenticated` deviendra `false`, et cette condition sera vraie.
   if (!isAuthenticated || !user) {
-    // Si l'un ou l'autre est faux, on redirige vers le login.
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // À ce stade, TypeScript sait que `user` n'est PAS null.
-  // On peut donc accéder à `user.role` en toute sécurité, sans '?'.
-  if (roles && !roles.includes(user.role)) {
-    // Rediriger vers le tableau de bord approprié en fonction du rôle
-    const redirectMap: Record<RoleType, string> = { // <-- Type plus strict pour redirectMap
-      pompiste: '/dashboard',
-      caissier: '/dashboard-caissier',
-      chef_de_piste: '/dashboard-chef-de-piste',
-      gerant: '/gerant/dashboard'
-    };
-    
-    // Pas besoin de 'as', l'accès est maintenant entièrement typé et sécurisé.
-    return <Navigate to={redirectMap[user.role]} replace />;
+  // 2. L'utilisateur est authentifié, mais n'a pas le bon rôle.
+  // TypeScript sait maintenant que `user` n'est pas `null`.
+  if (roles && roles.length > 0 && !roles.includes(user.role)) {
+    // Rediriger vers une page "Non autorisé" ou le dashboard par défaut du rôle de l'utilisateur.
+    // Pour cet exemple, une simple redirection vers "non autorisé" peut être plus claire.
+    return <Navigate to="/unauthorized" replace />;
   }
 
-  // L'utilisateur est authentifié, l'objet user existe, et il a le bon rôle.
+  // 3. Tout est en ordre.
   return <>{children}</>;
 };

@@ -66,107 +66,113 @@ import GerantAffectationPage from '../page/gerant/GerantAffectationPage';
 import GerantGestionPompesPage from '../page/gerant/GerantGestionPompesPage';
 import GerantGestionCuvesPage from '../page/gerant/GerantGestionCuvesPage';
 import GerantLogsActivitePage from '../page/gerant/GerantLogsActivitePage';
+import { ProtectedRoute } from '../components/ProtectedRoute';
+import type { RoleType } from '../contexts/AuthContext';
 
-
+// ---- FIN DES IMPORTS -----
 
 const AppRoutes: React.FC = () => {
+  // Fonction d'aide pour envelopper une page dans la protection et le layout
+  const protect = (Page: React.ElementType, roles: RoleType[]) => (
+    <ProtectedRoute roles={roles}>
+      <DashboardLayout>
+        <Page />
+      </DashboardLayout>
+    </ProtectedRoute>
+  );
+
+  const ALL_ROLES: RoleType[] = ['pompiste', 'caissier', 'chef_de_piste', 'gerant'];
+
   return (
     <Routes>
-      {/* ----- Authentification et Racine ----- */}
+      {/* ----- Route Publique (Login) et Redirection Racine ----- */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/" element={<Navigate replace to="/login" />} />
 
-      {/* ----- Routes Principales (Post-Login) ----- */}
-      <Route path="/dashboard" element={<DashboardPage />} />
-      <Route path="/dashboard-caissier" element={<DashboardCaissierPage />} />
-      <Route path="/dashboard-chef-de-piste" element={<DashboardChefDePistePage />} />
-      <Route path="/gerant/dashboard" element={<DashboardGerantPage />} />
+      {/* ========== ROUTES PROTÉGÉES ========== */}
 
-      {/* Communes */}
-      <Route path="/profil" element={<ProfilPage />} />
-      <Route path="/notifications" element={<NotificationsPage />} />
-      <Route path="/agenda" element={<AgendaPage />} />
-      <Route path="/signalements/absence" element={<SignalerAbsencePage />} />
+      {/* --- Pages Communes à tous les rôles authentifiés --- */}
+      <Route path="/profil" element={protect(ProfilPage, ALL_ROLES)} />
+      <Route path="/notifications" element={protect(NotificationsPage, ALL_ROLES)} />
+      <Route path="/agenda" element={protect(AgendaPage, ALL_ROLES)} />
+      <Route path="/signalements/absence" element={protect(SignalerAbsencePage, ALL_ROLES)} />
 
-      {/* --- Routes Spécifiques Pompiste --- */}
+      {/* --- Routes Pompiste --- */}
+      <Route path="/dashboard" element={protect(DashboardPage, ['pompiste'])} />
       <Route path="/ventes" element={<Navigate replace to="/ventes/directes" />} />
-      <Route path="/ventes/directes" element={<VentesListPage />} />
-      <Route path="/ventes/nouveau" element={<VentesFormPage />} />
-      <Route path="/ventes/terme" element={<VentesTermeListPage />} />
-      <Route path="/ventes/terme/nouveau" element={<VentesTermeFormPage />} />
-      <Route path="/carburants" element={<CarburantsPompistePage />} />
-      <Route path="/signalements/dysfonctionnement" element={<SignalerDysfonctionnementPage />} />
-      <Route path="/historique-quarts" element={<HistoriqueQuartsPompistePage />} />
+      <Route path="/ventes/directes" element={protect(VentesListPage, ['pompiste'])} />
+      <Route path="/ventes/nouveau" element={protect(VentesFormPage, ['pompiste'])} />
+      <Route path="/ventes/terme" element={protect(VentesTermeListPage, ['pompiste'])} />
+      <Route path="/ventes/terme/nouveau" element={protect(VentesTermeFormPage, ['pompiste'])} />
+      <Route path="/carburants" element={protect(CarburantsPompistePage, ['pompiste'])} />
+      <Route path="/signalements/dysfonctionnement" element={protect(SignalerDysfonctionnementPage, ['pompiste'])} />
+      <Route path="/historique-quarts" element={protect(HistoriqueQuartsPompistePage, ['pompiste'])} />
 
-      {/* --- Routes Spécifiques Caissier --- */}
+      {/* --- Routes Caissier --- */}
+      <Route path="/dashboard-caissier" element={protect(DashboardCaissierPage, ['caissier'])} />
       <Route path="/caisse" element={<Navigate replace to="/dashboard-caissier" />} />
       <Route path="/caisse/ventes" element={<Navigate replace to="/caisse/ventes/directes" />} />
-      <Route path="/caisse/ventes/directes" element={<VentesCaisseListPage />} />
-      <Route path="/caisse/ventes/nouveau" element={<VentesCaisseFormPage />} />
-      <Route path="/caisse/ventes/terme" element={<VentesTermeCaisseListPage />} />
-      <Route path="/caisse/ventes/terme/nouveau" element={<VentesTermeCaisseFormPage />} />
-      <Route path="/caisse/stock" element={<StockBoutiquePage />} />
-      <Route path="/signalements/ecart-caisse" element={<SignalementEcartPage />} />
-      <Route path="/caisse/signalements/dysfonctionnement" element={<SignalerDysfonctionnementCaissePage />} />
-      <Route path="/caisse/historique/clotures" element={<HistoriqueCloturesCaissePage />} />
+      <Route path="/caisse/ventes/directes" element={protect(VentesCaisseListPage, ['caissier'])} />
+      <Route path="/caisse/ventes/nouveau" element={protect(VentesCaisseFormPage, ['caissier'])} />
+      <Route path="/caisse/ventes/terme" element={protect(VentesTermeCaisseListPage, ['caissier'])} />
+      <Route path="/caisse/ventes/terme/nouveau" element={protect(VentesTermeCaisseFormPage, ['caissier'])} />
+      <Route path="/caisse/stock" element={protect(StockBoutiquePage, ['caissier'])} />
+      <Route path="/signalements/ecart-caisse" element={protect(SignalementEcartPage, ['caissier'])} />
+      <Route path="/caisse/signalements/dysfonctionnement" element={protect(SignalerDysfonctionnementCaissePage, ['caissier'])} />
+      <Route path="/caisse/historique/clotures" element={protect(HistoriqueCloturesCaissePage, ['caissier'])} />
 
-      {/* --- Routes Spécifiques Chef de Piste --- */}
+      {/* --- Routes Chef de Piste --- */}
+      <Route path="/dashboard-chef-de-piste" element={protect(DashboardChefDePistePage, ['chef_de_piste'])} />
       <Route path="/chef-de-piste" element={<Navigate replace to="/dashboard-chef-de-piste" />} />
-      <Route path="/chef-de-piste/saisie-index" element={<SaisieIndexChefDePistePage />} />
-      <Route path="/chef-de-piste/affectations" element={<AffectationPersonnelPage />} />
-      <Route path="/chef-de-piste/presences" element={<SuiviPresencesPage />} />
-      <Route path="/chef-de-piste/saisie-caisse" element={<SaisieCaissePhysiquePage />} />
-      <Route path="/chef-de-piste/signalements/ecarts" element={<SignalementEcartsChefDePistePage />} />
-      <Route path="/chef-de-piste/signalements/materiel" element={<SignalementMaterielChefDePistePage />} />
-
+      <Route path="/chef-de-piste/saisie-index" element={protect(SaisieIndexChefDePistePage, ['chef_de_piste'])} />
+      <Route path="/chef-de-piste/affectations" element={protect(AffectationPersonnelPage, ['chef_de_piste'])} />
+      <Route path="/chef-de-piste/presences" element={protect(SuiviPresencesPage, ['chef_de_piste'])} />
+      <Route path="/chef-de-piste/saisie-caisse" element={protect(SaisieCaissePhysiquePage, ['chef_de_piste'])} />
+      <Route path="/chef-de-piste/signalements/ecarts" element={protect(SignalementEcartsChefDePistePage, ['chef_de_piste'])} />
+      <Route path="/chef-de-piste/signalements/materiel" element={protect(SignalementMaterielChefDePistePage, ['chef_de_piste'])} />
       
-      {/* --- Routes Spécifiques Gérant --- */}
+      {/* --- Routes Gérant --- */}
+      <Route path="/gerant/dashboard" element={protect(DashboardGerantPage, ['gerant'])} />
       <Route path="/gerant" element={<Navigate replace to="/gerant/dashboard" />} />
-      <Route path="/gerant/stocks/cuves" element={<GerantNiveauxCuvesPage />} />
-      <Route path="/gerant/commandes/nouveau" element={<GerantBonsCommandePage />} /> 
-      <Route path="/gerant/livraisons/suivi" element={<GerantSuiviLivraisonsPage />} /> 
-      <Route path="/gerant/stocks/produits" element={<GerantStocksProduitsPage />} />
-      <Route path="/gerant/catalogue/gestion" element={<GerantCataloguePage />} /> 
-      <Route path="/gerant/ventes/personnel" element={<GerantVentesPersonnelPage />} />
-      <Route path="/gerant/rapports/activite" element={<GerantRapportsActivitePage />} />   
-      <Route path="/gerant/ventes/credit" element={<GerantVentesCreditPage />} />   
-      <Route path="/gerant/finance/marges" element={<GerantMargesPage />} />
-      <Route path="/gerant/finance/depenses" element={<GerantDepensesPage />} />
-      <Route path="/gerant/config/prix" element={<GerantConfigPage />} /> {/* Pour l'onglet prix carburant par défaut */}
-      <Route path="/gerant/config/seuils" element={<GerantConfigPage />} /> 
-      <Route path="/gerant/finance/facturation" element={<GerantFacturationPage />} />
-      <Route path="/gerant/personnel/performance" element={<GerantPerfPersonnelPage />} />
-      <Route path="/gerant/personnel/comptes" element={<GerantComptesUtilisateursPage />} /> 
-      <Route path="/gerant/clients/gestion" element={<GerantGestionClientsPage />} />
-      <Route path="/gerant/clients/releves" element={<GerantRelevesEntreprisesPage />} />
-      <Route path="/gerant/clients/reclamations" element={<GerantReclamationsPage />} />
-      <Route path="/gerant/maintenance/suivi" element={<GerantMaintenancePage />} />
-      <Route path="/gerant/maintenance/plans" element={<GerantPlansMaintenancePage />} />
-      <Route path="/gerant/maintenance/affectations" element={<GerantAffectationPage />} />
-      <Route path="/gerant/equipements/pompes" element={<GerantGestionPompesPage />} /> 
-      <Route path="/gerant/equipements/cuves" element={<GerantGestionCuvesPage />} />
-      <Route path="/gerant/securite/logs" element={<GerantLogsActivitePage />} /> 
-               {/* ----- Page Non Trouvée (404) ----- */}
+      <Route path="/gerant/stocks/cuves" element={protect(GerantNiveauxCuvesPage, ['gerant'])} />
+      <Route path="/gerant/commandes/nouveau" element={protect(GerantBonsCommandePage, ['gerant'])} /> 
+      <Route path="/gerant/livraisons/suivi" element={protect(GerantSuiviLivraisonsPage, ['gerant'])} /> 
+      <Route path="/gerant/stocks/produits" element={protect(GerantStocksProduitsPage, ['gerant'])} />
+      <Route path="/gerant/catalogue/gestion" element={protect(GerantCataloguePage, ['gerant'])} /> 
+      <Route path="/gerant/ventes/personnel" element={protect(GerantVentesPersonnelPage, ['gerant'])} />
+      <Route path="/gerant/rapports/activite" element={protect(GerantRapportsActivitePage, ['gerant'])} />   
+      <Route path="/gerant/ventes/credit" element={protect(GerantVentesCreditPage, ['gerant'])} />   
+      <Route path="/gerant/finance/marges" element={protect(GerantMargesPage, ['gerant'])} />
+      <Route path="/gerant/finance/depenses" element={protect(GerantDepensesPage, ['gerant'])} />
+      <Route path="/gerant/config/prix" element={protect(GerantConfigPage, ['gerant'])} />
+      <Route path="/gerant/config/seuils" element={protect(GerantConfigPage, ['gerant'])} /> 
+      <Route path="/gerant/finance/facturation" element={protect(GerantFacturationPage, ['gerant'])} />
+      <Route path="/gerant/personnel/performance" element={protect(GerantPerfPersonnelPage, ['gerant'])} />
+      <Route path="/gerant/personnel/comptes" element={protect(GerantComptesUtilisateursPage, ['gerant'])} /> 
+      <Route path="/gerant/clients/gestion" element={protect(GerantGestionClientsPage, ['gerant'])} />
+      <Route path="/gerant/clients/releves" element={protect(GerantRelevesEntreprisesPage, ['gerant'])} />
+      <Route path="/gerant/clients/reclamations" element={protect(GerantReclamationsPage, ['gerant'])} />
+      <Route path="/gerant/maintenance/suivi" element={protect(GerantMaintenancePage, ['gerant'])} />
+      <Route path="/gerant/maintenance/plans" element={protect(GerantPlansMaintenancePage, ['gerant'])} />
+      <Route path="/gerant/maintenance/affectations" element={protect(GerantAffectationPage, ['gerant'])} />
+      <Route path="/gerant/equipements/pompes" element={protect(GerantGestionPompesPage, ['gerant'])} /> 
+      <Route path="/gerant/equipements/cuves" element={protect(GerantGestionCuvesPage, ['gerant'])} />
+      <Route path="/gerant/securite/logs" element={protect(GerantLogsActivitePage, ['gerant'])} /> 
 
-
-
+      {/* ----- Route "Non Trouvée" (404) pour les utilisateurs connectés ----- */}
       <Route
         path="*"
         element={
           <DashboardLayout>
             <div className="flex flex-col items-center justify-center h-full py-10 text-center">
               <h1 className="text-6xl font-bold text-purple-600">404</h1>
-              <p className="mt-4 text-2xl font-medium text-gray-700">
-                Oops! Page non trouvée.
-              </p>
-              <p className="mt-2 text-gray-500">
-                La page que vous recherchez n'existe pas ou a été déplacée.
-              </p>
+              <p className="mt-4 text-2xl font-medium text-gray-700">Oops! Page non trouvée.</p>
+              <p className="mt-2 text-gray-500">La page que vous recherchez n'existe pas ou a été déplacée.</p>
               <Link
-                to="/login" // Ou dynamiquement vers le dashboard du rôle actuel si l'utilisateur est connecté
+                to="/login" // Redirection sécurisée vers la page de connexion
                 className="mt-8 inline-block px-6 py-3 bg-purple-600 text-white text-sm font-semibold rounded-md hover:bg-purple-700 transition-colors"
               >
-                Retour à l'accueil
+                Retour à la page de connexion
               </Link>
             </div>
           </DashboardLayout>
