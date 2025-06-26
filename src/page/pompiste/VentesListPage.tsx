@@ -7,7 +7,6 @@ import { format } from 'date-fns';
 // Types, Mocks et Composants
 import type { VenteDirecte } from '../../types/ventes';
 import { dummyVentesDirectes } from '../../_mockData/ventes';
-import DashboardLayout from '../../layouts/DashboardLayout';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
@@ -60,7 +59,6 @@ const VentesListPage: React.FC = () => {
     const tableColumns = getVentesColumns(handleView, handleEdit, handleDelete);
     
     return (
-        <DashboardLayout>
             <div className="space-y-6">
                 <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                      <div className="flex items-center">
@@ -100,7 +98,6 @@ const VentesListPage: React.FC = () => {
                     />
                  </Card>
             </div>
-        </DashboardLayout>
     );
 };
 

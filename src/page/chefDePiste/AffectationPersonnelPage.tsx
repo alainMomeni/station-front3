@@ -103,7 +103,7 @@ const AffectationPersonnelPage: React.FC = () => {
                             {quartsDuJour.map(quart => (
                                 <Card key={quart.id} title={`Quart: ${quart.libelle}`} icon={FiUsers}>
                                     <div className="divide-y divide-gray-100">
-                                    {quart.postesAConfigurer.map(poste => (
+                                    {quart.postesAConfigurer.map((poste: PosteDeTravail) => (
                                         <AffectationRow
                                             key={poste.id}
                                             quartId={quart.id}

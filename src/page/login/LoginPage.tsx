@@ -47,10 +47,12 @@ export default function LoginPage() {
     }
   };
 
-  const fillCredentials = (role: 'chef_de_piste' | 'gerant') => {
+  const fillCredentials = (role: 'chef_de_piste' | 'gerant' | 'pompiste' | 'caissier') => {
     const credentials = {
       chef_de_piste: { email: 'chef@station.cm', password: 'chef123' },
-      gerant: { email: 'gerant@station.cm', password: 'gerant123' }
+      gerant: { email: 'gerant@station.cm', password: 'gerant123' },
+      pompiste: { email: 'pompiste@station.cm', password: 'pompiste123' },
+      caissier: { email: 'caissier@station.cm', password: 'caissier123' }
     };
     setEmail(credentials[role].email);
     setPassword(credentials[role].password);

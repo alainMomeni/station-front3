@@ -82,3 +82,39 @@ export interface VenteDirecte {
   client?: string;
   remise?: number;
 }
+
+export interface VenteDirectePompisteFormData {
+  produit: string;
+  quantite: string;
+  prixUnitaire: string;
+  montantTotal: string;
+  modePaiement: string;
+  pompe: string;
+  client?: string;
+  remise?: string;
+  pompiste: string;
+}
+
+export interface VenteTermeFormData {
+  client: string;
+  produit: string;
+  quantite: string;
+  prixUnitaire: string;
+  montantTotal: string;
+  dateEcheance: string;
+  notes?: string;
+  pompiste: string;
+}
+
+export interface VenteTerme {
+  id: string;
+  client: string;
+  produit: string;
+  quantite: number | string;
+  montantTotal: number | string;
+  dateEcheance: string;
+  statut: StatutVenteTerme;
+  status: StatutVenteTerme;
+}
+
+export type StatutVenteTerme = 'En attente' | 'Payée' | 'En retard';

@@ -1,5 +1,5 @@
 // src/page/pompiste/DashboardPage.tsx (FINAL & COHÉRENT)
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
     FiGrid, FiClock, FiDroplet, FiDollarSign, FiLayers, FiAlertTriangle, FiList, 
@@ -7,11 +7,12 @@ import {
 } from 'react-icons/fi';
 
 // Écosystème et UI Kit
-import DashboardLayout from '../../layouts/DashboardLayout';
 import { Card } from '../../components/ui/Card';
 import { StatCard } from '../../components/ui/StatCard';
 import { Button } from '../../components/ui/Button';
 import TopFuelVolumeChart from '../../components/charts/TopFuelVolumeChart'; // Composant supposé exister
+import { dummyCuvesData } from '../../_mockData/equipements'; // Assure-toi que ce mock existe
+import type { CuveData } from '../../types/equipements';
 
 // --- Données Mock (inchangées) ---
 const shiftInfo = { startTime: '07:00', endTime: '15:00', pompes: 'P01, P02', transactions: 62 };
@@ -22,9 +23,26 @@ const topCarburantsData = [{ name: "Diesel", volume: 980 }, { name: "SP95", volu
 
 
 const DashboardPompistePage: React.FC = () => {
+  const [, setCuves] = useState<CuveData[]>([]);
+  const [, setIsLoading] = useState(true);
+  const [] = useState<CuveData | null>(null);
+
+  useEffect(() => {
+    // Simuler un chargement asynchrone
+    setTimeout(() => {
+      setCuves(
+        dummyCuvesData.map((cuve: any) => ({
+          ...cuve,
+          nomCuve: cuve.nomCuve ?? cuve.nom ?? '',
+          typeCarburant: cuve.typeCarburant ?? cuve.typeCarburantNom ?? '',
+        }))
+      ); // Remplace par l'appel API réel si besoin
+      setIsLoading(false);
+    }, 800);
+  }, []);
 
   return (
-    <DashboardLayout>
+
       <div className="space-y-6">
         <div className="flex items-center">
             <div className="p-3 bg-purple-600 rounded-2xl shadow-lg mr-4">
@@ -95,7 +113,6 @@ const DashboardPompistePage: React.FC = () => {
             </div>
         </div>
       </div>
-    </DashboardLayout>
   );
 };
 

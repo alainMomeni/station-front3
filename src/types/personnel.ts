@@ -16,6 +16,7 @@ export interface PosteDeTravail {
 export type StatutQuart = 'planifie' | 'en_cours' | 'termine' | 'cloture';
 
 export interface QuartTravail {
+  postesAConfigurer: any;
   id: string;
   libelle: string;
   heureDebut: string;
@@ -114,4 +115,46 @@ export interface SuiviPresenceEmploye {
   heureArriveeReelle?: string;
   heureDepartReelle?: string;
   motifAbsenceRetard?: string;
+}
+
+// Add Shift interface
+export interface Shift {
+  id: string;
+  date: string; // format 'YYYY-MM-DD'
+  startTime: string; // format 'HH:mm'
+  endTime: string;   // format 'HH:mm'
+  type?: string;
+  notes?: string;
+}
+
+export interface IndexParPompeCuve {
+  idPompeCuve: string;
+  nomCarburant: string;
+  indexDebut: number;
+  indexFin: number;
+  volumeVendu: number;
+}
+
+export interface SyntheseQuartData {
+  id: string;
+  pompisteNom: string;
+  dateHeureDebut: string;
+  dateHeureFin: string;
+  pompesGerees: string[];
+  indexDetailsParPompe?: IndexParPompeCuve[];
+  totalVolumeCarburantVenduLitres: number;
+  totalValeurVenduXAF: number;
+  totalVentesEspeces: number;
+  totalVentesCarte: number;
+  totalVentesMobile: number;
+  notesQuart?: string;
+}
+
+export interface ProfileState {
+  nom: string;
+  prenom: string;
+  email: string;
+  role: string;
+  telephone?: string;
+  avatarUrl?: string;
 }

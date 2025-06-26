@@ -1,158 +1,134 @@
-// src/pages/pompiste/ProfilPage.tsx (ou le chemin correct)
-import React, { useState, useEffect } from 'react';
-import { FiEdit3, FiSave, FiCamera } from 'react-icons/fi';
-import Spinner from '../../components/Spinner'; // Assurez-vous d'avoir ce composant
-import { useAuthContext } from '../../contexts/AuthContext'; // 1. IMPORTER LE CONTEXTE
+import React, { useState, useEffect, type FC } from 'react';
+import { FiUser, FiEdit3, FiSave, FiCamera } from 'react-icons/fi';
+import { useAuthContext } from '../../contexts/AuthContext';
+import type { ProfileState } from '../../types/personnel';
+import { Button } from '../../components/ui/Button';
+import { Card } from '../../components/ui/Card';
+import { Input } from '../../components/ui/Input';
+import Spinner from '../../components/Spinner';
 
-// Interface pour définir la structure de l'état du profil
-interface ProfileState {
-  nom: string;
-  prenom: string;
-  email: string;
-  role: string;
-  telephone: string;
-  avatarUrl: string;
-}
+const ProfileDisplay: FC<{ profile: ProfileState, onEdit: () => void }> = ({ profile, onEdit }) => (
+    <>
+        <h2 className="text-3xl font-bold text-gray-800">{profile.prenom} {profile.nom}</h2>
+        <p className="text-md text-purple-600 font-semibold mb-6">{profile.role}</p>
+        <div className="space-y-3 text-gray-700 border-t pt-4">
+            <div className="flex"><strong className="w-24 shrink-0">Email:</strong><span>{profile.email}</span></div>
+            <div className="flex"><strong className="w-24 shrink-0">Téléphone:</strong><span>{profile.telephone || 'Non spécifié'}</span></div>
+        </div>
+        <div className="mt-8">
+            <Button onClick={onEdit} leftIcon={<FiEdit3/>}>Modifier le Profil</Button>
+        </div>
+    </>
+);
+
+const ProfileForm: FC<{
+    tempProfile: ProfileState;
+    onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onSaveChanges: () => void;
+    onCancel: () => void;
+    isLoading: boolean;
+}> = ({ tempProfile, onInputChange, onSaveChanges, onCancel, isLoading }) => (
+    <form onSubmit={(e) => { e.preventDefault(); onSaveChanges(); }} className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input label="Prénom" name="prenom" value={tempProfile.prenom} onChange={onInputChange} required/>
+            <Input label="Nom" name="nom" value={tempProfile.nom} onChange={onInputChange} required/>
+        </div>
+        <Input label="Email" type="email" name="email" value={tempProfile.email} onChange={onInputChange} required/>
+        <Input label="Téléphone" type="tel" name="telephone" value={tempProfile.telephone} onChange={onInputChange} />
+        <div className="flex space-x-3 pt-4">
+            <Button type="submit" loading={isLoading}>
+                <FiSave className="mr-2"/> Enregistrer
+            </Button>
+            <Button type="button" variant="secondary" onClick={onCancel}>Annuler</Button>
+        </div>
+    </form>
+);
 
 const ProfilPage: React.FC = () => {
-  // 2. RECUPERER L'UTILISATEUR DEPUIS LE CONTEXTE
-  const { user: contextUser } = useAuthContext();
+    const { user: contextUser } = useAuthContext();
+    const [profile, setProfile] = useState<ProfileState | null>(null);
+    const [tempProfile, setTempProfile] = useState<ProfileState | null>(null);
+    const [isEditing, setIsEditing] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
-  // État local pour le profil affiché et les modifications temporaires
-  const [profile, setProfile] = useState<ProfileState | null>(null);
-  const [tempProfile, setTempProfile] = useState<ProfileState | null>(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+    useEffect(() => {
+        if (contextUser) {
+            const nameParts = contextUser.name.split(' ');
+            const prenom = nameParts.shift() || '';
+            const nom = nameParts.join(' ');
 
-  // 3. SYNCHRONISER L'ETAT LOCAL AVEC LE CONTEXTE
-  useEffect(() => {
-    // Ne s'exécute que si contextUser n'est pas null
-    if (contextUser) {
-      // Sépare le nom complet en prénom et nom.
-      const nameParts = contextUser.name.split(' ');
-      const prenom = nameParts.shift() || ''; // Le premier élément est le prénom
-      const nom = nameParts.join(' ');     // Le reste est le nom
+            const initialProfile: ProfileState = {
+                nom,
+                prenom,
+                email: contextUser.email,
+                role: contextUser.roleLabel,
+                telephone: contextUser.telephone || '', 
+                avatarUrl: contextUser.avatarUrl || `https://ui-avatars.com/api/?name=${contextUser.name.replace(' ', '+')}&background=8B5CF6&color=fff&size=128`,
+            };
+            setProfile(initialProfile);
+            setTempProfile(initialProfile);
+        }
+    }, [contextUser]);
 
-      const initialProfile: ProfileState = {
-        nom,
-        prenom,
-        email: contextUser.email,
-        role: contextUser.roleLabel,
-        telephone: '0123456789', // Info non présente dans le contexte, on garde une valeur par défaut
-        avatarUrl: `https://ui-avatars.com/api/?name=${contextUser.name.replace(' ', '+')}&background=8B5CF6&color=fff&size=128`, // Génère un avatar à partir du nom
-      };
-      
-      setProfile(initialProfile);
-      setTempProfile(initialProfile);
-    }
-  }, [contextUser]); // Se redéclenche si l'utilisateur du contexte change
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (tempProfile) {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!tempProfile) return;
         setTempProfile({ ...tempProfile, [e.target.name]: e.target.value });
-    }
-  };
-
-  const handleSaveChanges = async () => {
-    if (!tempProfile) return;
-    setIsLoading(true);
-
-    // TODO: Dans une vraie application, appeler ici une fonction updateUser(tempProfile)
-    // qui mettrait à jour le contexte et la base de données.
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    };
     
-    setProfile(tempProfile);
-    setIsEditing(false);
-    setIsLoading(false);
-    alert('Profil mis à jour !');
-  };
-  
-  // 4. AFFICHER UN ETAT DE CHARGEMENT
-  if (!profile || !tempProfile) {
-    return (
-        <div className="flex justify-center items-center h-64">
-            <Spinner size="lg" />
-        </div>
-    );
-  }
+    const handleSaveChanges = async () => {
+        if (!tempProfile) return;
+        setIsLoading(true);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setProfile(tempProfile);
+        setIsEditing(false);
+        setIsLoading(false);
+        alert('Profil mis à jour avec succès !');
+    };
 
-  return (
-    <>
-      <h1 className="text-2xl font-semibold text-gray-800 border-b-2 border-purple-600 inline-block pr-4 pb-1 mb-8">
-        Mon Profil
-      </h1>
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <div className="flex flex-col items-center md:flex-row md:items-start space-y-6 md:space-y-0 md:space-x-8">
-          <div className="relative">
-            <img
-              src={profile.avatarUrl}
-              alt={`${profile.nom}'s avatar`}
-              className="w-32 h-32 rounded-full object-cover shadow-lg border-4 border-purple-200"
-            />
-            {isEditing && (
-                <label
-                  htmlFor="avatarUpload"
-                  className="absolute bottom-1 right-1 bg-purple-600 p-2 rounded-full text-white hover:bg-purple-700 cursor-pointer shadow-md"
-                  title="Changer l'avatar"
-                >
-                    <FiCamera className="h-4 w-4" />
-                    <input type="file" id="avatarUpload" className="hidden" accept="image/*" />
-                </label>
-            )}
-          </div>
-          <div className="flex-1 w-full">
-            {!isEditing ? (
-              <>
-                <h2 className="text-2xl font-bold text-purple-700">{profile.prenom} {profile.nom}</h2>
-                <p className="text-sm text-gray-500 mb-4">{profile.role}</p>
-                <div className="space-y-3 text-gray-700">
-                  <p><strong>Email :</strong> {profile.email}</p>
-                  <p><strong>Téléphone :</strong> {profile.telephone || 'Non spécifié'}</p>
+    if (!profile) {
+        return <><div className="flex justify-center p-20"><Spinner size="lg" /></div></>;
+    }
+    
+    return (
+        <>
+            <div className="space-y-6">
+                <div className="flex items-center">
+                    <div className="p-3 bg-purple-600 rounded-2xl shadow-lg mr-4"><FiUser className="text-white text-2xl" /></div>
+                    <div>
+                        <h1 className="text-3xl font-bold text-gray-800">Mon Profil</h1>
+                        <p className="text-gray-600">Gérez vos informations personnelles et vos paramètres.</p>
+                    </div>
                 </div>
-                <button
-                  onClick={() => { setTempProfile(profile); setIsEditing(true); }}
-                  className="mt-6 inline-flex items-center px-4 py-2 bg-purple-100 text-purple-700 text-sm font-medium rounded-md hover:bg-purple-200"
-                >
-                  <FiEdit3 className="mr-2 h-4 w-4" /> Modifier le profil
-                </button>
-              </>
-            ) : (
-              <form className="space-y-4" onSubmit={(e) => {e.preventDefault(); handleSaveChanges();}}>
-                <div>
-                  <label htmlFor="prenom" className="block text-sm font-medium text-gray-700">Prénom</label>
-                  <input type="text" name="prenom" id="prenom" value={tempProfile.prenom} onChange={handleInputChange} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-purple-500 focus:border-purple-500 sm:text-sm" />
-                </div>
-                 <div>
-                  <label htmlFor="nom" className="block text-sm font-medium text-gray-700">Nom</label>
-                  <input type="text" name="nom" id="nom" value={tempProfile.nom} onChange={handleInputChange} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-purple-500 focus:border-purple-500 sm:text-sm" />
-                </div>
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-                  <input type="email" name="email" id="email" value={tempProfile.email} onChange={handleInputChange} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-purple-500 focus:border-purple-500 sm:text-sm" />
-                </div>
-                <div>
-                  <label htmlFor="telephone" className="block text-sm font-medium text-gray-700">Téléphone</label>
-                  <input type="tel" name="telephone" id="telephone" value={tempProfile.telephone} onChange={handleInputChange} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-purple-500 focus:border-purple-500 sm:text-sm" />
-                </div>
-                <div className="flex space-x-3 pt-2">
-                  <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="inline-flex items-center justify-center px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 min-w-[120px]"
-                  >
-                    {isLoading ? <Spinner size="sm" color="text-white" /> : <><FiSave className="mr-2 h-4 w-4" /> Enregistrer</>}
-                  </button>
-                  <button type="button" onClick={() => setIsEditing(false)} className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">
-                    Annuler
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
-        </div>
-      </div>
-    </>
-  );
+
+                <Card>
+                    <div className="p-8 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                        <div className="md:col-span-1 flex flex-col items-center">
+                             <img src={profile.avatarUrl} alt="Avatar" className="w-40 h-40 rounded-full object-cover shadow-lg border-4 border-white mb-4"/>
+                             {isEditing && (
+                                <label htmlFor="avatar-upload" className="cursor-pointer">
+                                     <Button variant="secondary" size="sm" leftIcon={<FiCamera/>}>Changer la photo</Button>
+                                     <input id="avatar-upload" type="file" className="sr-only"/>
+                                 </label>
+                             )}
+                        </div>
+                        <div className="md:col-span-2 text-center md:text-left">
+                             {!isEditing ? (
+                                <ProfileDisplay profile={profile} onEdit={() => setIsEditing(true)}/>
+                             ) : (
+                                <ProfileForm 
+                                    tempProfile={tempProfile!} 
+                                    onInputChange={handleInputChange}
+                                    onSaveChanges={handleSaveChanges} 
+                                    onCancel={() => setIsEditing(false)}
+                                    isLoading={isLoading}
+                                />
+                             )}
+                        </div>
+                    </div>
+                </Card>
+            </div>
+        </>
+    );
 };
 
 export default ProfilPage;

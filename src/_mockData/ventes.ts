@@ -1,6 +1,6 @@
 // Assumons le nom de fichier : src/_mockData/ventes.ts
 import { subDays } from 'date-fns';
-import type { VenteDirecte, PerformanceVenteEmploye, QuartTravail } from '../types/ventes';
+import type { VenteDirecte, PerformanceVenteEmploye, QuartTravail, VenteTerme, StatutVenteTerme } from '../types/ventes';
 
 // Mock direct sales data - FIX
 export const dummyVentesDirectes: VenteDirecte[] = [
@@ -115,3 +115,48 @@ export const fetchVentesParPersonnel = async (
         }
     ];
 };
+
+export const produitsCarburant = [
+  { id: 'SP95', nom: 'Super SP95', prix: 750, unite: 'L' },
+  { id: 'DIESEL', nom: 'Diesel', prix: 700, unite: 'L' },
+  { id: 'SP98', nom: 'SP98', prix: 800, unite: 'L' }
+];
+
+export const clientsDisponibles = [
+  { id: 'CLI001', nom: 'Transport Express Plus' },
+  { id: 'CLI002', nom: 'BTP Construction S.A.' },
+  { id: 'CLI003', nom: 'AgroDistrib & Co' }
+];
+
+export const dummyVentesTerme: VenteTerme[] = [
+  {
+    id: 'VT-001',
+    client: 'Transport Express Plus',
+    produit: 'Super SP95',
+    quantite: 500,
+    montantTotal: 375000,
+    dateEcheance: '2024-08-15',
+    statut: 'En attente' as StatutVenteTerme,
+    status: 'En attente' as StatutVenteTerme
+  },
+  {
+    id: 'VT-002',
+    client: 'BTP Construction S.A.',
+    produit: 'Diesel',
+    quantite: 1200,
+    montantTotal: 840000,
+    dateEcheance: '2024-08-20',
+    statut: 'Payée' as StatutVenteTerme,
+    status: 'Payée' as StatutVenteTerme
+  },
+  {
+    id: 'VT-003',
+    client: 'AgroDistrib & Co',
+    produit: 'SP98',
+    quantite: 300,
+    montantTotal: 240000,
+    dateEcheance: '2024-08-10',
+    statut: 'En retard' as StatutVenteTerme,
+    status: 'En retard' as StatutVenteTerme
+  }
+];

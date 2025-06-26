@@ -59,3 +59,17 @@ export interface Cuve {
   niveauActuel?: number; // Donnée optionnelle, pour affichage, provient d'une autre logique
   statut: StatutCuve;
 }
+
+export interface CuveData {
+  id: string;
+  nomCuve: string;
+  typeCarburant: string;
+  capaciteMax: number;
+  niveauActuel: number;
+  seuilSecurite: number;
+  stockOuvertureQuart?: number;
+  prixVenteUnitaire?: number;
+  unite?: string;
+  dernierIndexDebut?: number;
+  dernierIndexFin?: number;
+}

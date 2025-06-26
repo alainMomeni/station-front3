@@ -1,62 +1,91 @@
-import React, { useState } from 'react';
-import { format, addMonths, subMonths, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isSameDay } from 'date-fns'; // Removed getDay, parseISO if not directly used for now
+// src/page/pompiste/AgendaPage.tsx (VERSION FINALE AVEC IMPORTS CORRIGÉS)
+import React, { useState, useEffect } from 'react';
+import { format, addMonths, subMonths, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isSameDay, addDays } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
-// ** Import the modal component **
+import { FiCalendar, FiChevronLeft, FiChevronRight, FiEye, FiAlertCircle } from 'react-icons/fi';
+
+// Types et composants
+import type { Shift } from '../../types/personnel';
+import { Button } from '../../components/ui/Button';
+import { Card } from '../../components/ui/Card';
 import ShiftDetailModal from '../../components/ShiftDetailModal';
 
-// Define Shift type (or import if defined elsewhere)
-interface Shift {
-    id: string;
-    date: string;
-    startTime: string;
-    endTime: string;
-    type?: string;
-    notes?: string;
-}
-
-const userShifts: Shift[] = [
-    { id: 's1', date: '2024-07-15', startTime: '07:00', endTime: '15:00', type: 'Matin', notes: "Penser à vérifier le niveau d'huile du générateur." },
-    { id: 's2', date: '2024-07-16', startTime: '07:00', endTime: '15:00', type: 'Matin' },
-    { id: 's3', date: '2024-07-18', startTime: '14:00', endTime: '22:00', type: 'Soir' },
-    { id: 's4', date: '2024-07-19', startTime: '14:00', endTime: '22:00', type: 'Soir', notes: "Livraison de carburant prévue.\n- Superviser la réception." },
-    { id: 's5', date: '2024-07-22', startTime: '07:00', endTime: '15:00', type: 'Matin' },
-    // Adding a shift in the current month for testing
-    { id: 's6', date: format(new Date(), 'yyyy-MM-dd'), startTime: '09:00', endTime: '17:00', type: 'Test', notes: "Shift d'aujourd'hui pour tester le modal." },
-    { id: 's7', date: '2024-08-01', startTime: '22:00', endTime: '06:00', type: 'Nuit' },
-];
+// CHOISISSEZ L'UNE DES DEUX IMPORTS SUIVANTES :
+// Option 1 : Si vous avez un fichier planning.ts séparé
+import { userShifts } from '../../_mockData/planning';
+// Option 2 : Si vous utilisez le fichier personnel.ts (commentez la ligne au-dessus et décommentez celle-ci)
+// import { userShifts } from '../../_mockData/personnel';
 
 const AgendaPage: React.FC = () => {
     const [currentMonth, setCurrentMonth] = useState(new Date());
-    const today = new Date();
-    // ** State for modal visibility and selected shift **
     const [selectedShift, setSelectedShift] = useState<Shift | null>(null);
     const [selectedDateForModal, setSelectedDateForModal] = useState<Date | null>(null);
+    const [debugInfo, setDebugInfo] = useState<string>('');
+    const today = new Date();
 
+    // ====== EFFET DE DEBUG AU CHARGEMENT ======
+    useEffect(() => {
+        console.log('🔍 DIAGNOSTIC AGENDA PAGE:');
+        console.log('📅 Shifts disponibles:', userShifts);
+        console.log('📅 Nombre de shifts:', userShifts.length);
+        console.log('📅 Mois courant:', format(currentMonth, 'MMMM yyyy', { locale: fr }));
+        console.log('📅 Aujourd\'hui:', format(today, 'yyyy-MM-dd'));
+        
+        // Vérifier si des shifts existent pour le mois courant
+        const currentMonthShifts = userShifts.filter(shift => {
+            const shiftDate = new Date(shift.date + 'T00:00:00');
+            return isSameMonth(shiftDate, currentMonth);
+        });
+        
+        const debugText = `Shifts ce mois: ${currentMonthShifts.length}/${userShifts.length}`;
+        setDebugInfo(debugText);
+        console.log('📊', debugText, currentMonthShifts);
+    }, [currentMonth]);
 
+    // ====== LOGIQUE DU CALENDRIER ======
     const monthStart = startOfMonth(currentMonth);
-    const monthEnd = endOfMonth(monthStart);
-    const startDate = startOfWeek(monthStart, { locale: fr });
-    const endDate = endOfWeek(monthEnd, { locale: fr });
-    const daysInGrid = eachDayOfInterval({ start: startDate, end: endDate });
-    const dayNames = Array.from({ length: 7 }, (_, i) =>
-        // To get correct week days starting Monday, ensure a date within the week is used
-        format(addMonths(startDate, i % 7), 'eee', { locale: fr }) // Use mod 7 if startOfWeek could be Sunday depending on locale
+    const weekStartForDayNames = startOfWeek(new Date(), { locale: fr, weekStartsOn: 1 });
+    const dayNames = Array.from({ length: 7 }, (_, i) => 
+        format(addDays(weekStartForDayNames, i), 'eee', { locale: fr })
     );
 
-    const goToPreviousMonth = () => setCurrentMonth(subMonths(currentMonth, 1));
-    const goToNextMonth = () => setCurrentMonth(addMonths(currentMonth, 1));
-
+    const daysInGrid = eachDayOfInterval({ 
+        start: startOfWeek(monthStart, { locale: fr, weekStartsOn: 1 }), 
+        end: endOfWeek(endOfMonth(monthStart), { locale: fr, weekStartsOn: 1 }) 
+    });
+    
+    // ====== FONCTION DE RECHERCHE DE SHIFT RENFORCÉE ======
     const getShiftForDay = (day: Date): Shift | undefined => {
-        const dateString = format(day, 'yyyy-MM-dd');
-        return userShifts.find(shift => shift.date === dateString);
+        const dayFormatted = format(day, 'yyyy-MM-dd');
+        
+        // Recherche directe
+        let shift = userShifts.find(s => s.date === dayFormatted);
+        
+        // Recherche alternative avec comparaison de dates
+        if (!shift) {
+            shift = userShifts.find(s => {
+                const shiftDate = new Date(s.date + 'T00:00:00');
+                return isSameDay(shiftDate, day);
+            });
+        }
+        
+        if (shift) {
+            console.log(`✅ Shift trouvé pour ${dayFormatted}:`, shift);
+        }
+        
+        return shift;
     };
-
-    // ** Function to handle day click **
-    const handleDayClick = (day: Date, shift: Shift | undefined) => {
+    
+    // ====== GESTIONNAIRES D'ÉVÉNEMENTS ======
+    const handleDayClick = (day: Date) => {
+        const shift = getShiftForDay(day);
+        console.log('🖱️ Clic sur le jour:', format(day, 'yyyy-MM-dd'), 'Shift:', shift);
+        
         if (shift) {
             setSelectedShift(shift);
             setSelectedDateForModal(day);
+        } else {
+            console.warn('❌ Aucun shift trouvé pour', format(day, 'yyyy-MM-dd'));
         }
     };
 
@@ -65,100 +94,151 @@ const AgendaPage: React.FC = () => {
         setSelectedDateForModal(null);
     };
 
+    const goToPreviousMonth = () => {
+        setCurrentMonth(subMonths(currentMonth, 1));
+    };
+
+    const goToNextMonth = () => {
+        setCurrentMonth(addMonths(currentMonth, 1));
+    };
+
+    const goToToday = () => {
+        setCurrentMonth(new Date());
+    };
+
     return (
         <>
-            <div className="mb-6">
-                <h1 className="text-2xl font-semibold text-gray-800 border-b-2 border-purple-600 inline-block pr-4 pb-1">
-                    Mon Planning
-                </h1>
-            </div>
-
-            <div className="bg-white p-4 md:p-6 rounded-lg shadow-lg">
-                <div className="flex items-center justify-between mb-4 md:mb-6">
-                    {/* Month Navigation... remains same */}
-                    <button
-                        onClick={goToPreviousMonth}
-                        aria-label="Mois précédent"
-                        className="p-2 rounded-md hover:bg-gray-100 text-gray-500 hover:text-purple-600 transition duration-150"
-                    >
-                        <FiChevronLeft className="h-6 w-6" />
-                    </button>
-                    <h2 className="text-lg md:text-xl font-semibold text-gray-700 capitalize">
-                        {format(currentMonth, 'MMMM yyyy', { locale: fr })}
-                    </h2>
-                    <button
-                        onClick={goToNextMonth}
-                        aria-label="Mois suivant"
-                        className="p-2 rounded-md hover:bg-gray-100 text-gray-500 hover:text-purple-600 transition duration-150"
-                    >
-                        <FiChevronRight className="h-6 w-6" />
-                    </button>
-                </div>
-
-                <div className="grid grid-cols-7 gap-px border-l border-t border-gray-200 bg-gray-200">
-                    {dayNames.map((dayName) => (
-                        <div key={dayName} className="text-center py-2 text-xs font-semibold text-gray-600 uppercase bg-gray-50 border-r border-b border-gray-200 capitalize">
-                            {dayName}
-                        </div>
-                    ))}
-
-                    {daysInGrid.map((day, index) => {
-                        const isCurrentMonth = isSameMonth(day, currentMonth);
-                        const isToday = isSameDay(day, today);
-                        const shift = getShiftForDay(day);
-
-                        return (
-                            <div
-                                key={index}
-                                className={`
-                                    relative p-2 min-h-[80px] md:min-h-[100px] text-left
-                                    border-r border-b border-gray-200 transition duration-150
-                                    ${isCurrentMonth ? 'bg-white' : 'bg-gray-50 text-gray-400'}
-                                    ${isToday ? 'bg-purple-50' : ''}
-                                    ${shift && isCurrentMonth ? 'cursor-pointer hover:bg-purple-100' : ''}
-                                `}
-                                // ** Add onClick handler **
-                                onClick={() => handleDayClick(day, shift)}
-                                role={shift && isCurrentMonth ? "button" : undefined} // Semantics
-                                tabIndex={shift && isCurrentMonth ? 0 : undefined} // Accessibility
-                                onKeyDown={(e) => { // Keyboard accessibility for button-like divs
-                                    if ((e.key === 'Enter' || e.key === ' ') && shift && isCurrentMonth) {
-                                        handleDayClick(day, shift);
-                                    }
-                                }}
-                            >
-                                <time
-                                    dateTime={format(day, 'yyyy-MM-dd')}
-                                    className={`
-                                        text-xs md:text-sm font-semibold select-none
-                                        ${isToday ? 'text-purple-700 rounded-full bg-purple-200 w-6 h-6 flex items-center justify-center' : ''}
-                                        ${!isCurrentMonth ? 'text-gray-400' : 'text-gray-800'}
-                                    `}
-                                >
-                                    {format(day, 'd')}
-                                </time>
-
-                                {shift && isCurrentMonth && (
-                                    <div className="mt-1.5 p-1.5 rounded-md bg-purple-200 border border-purple-300 text-purple-800 text-xs leading-tight shadow-sm select-none">
-                                        <p className="font-semibold">{shift.type || 'Travail'}</p>
-                                        <p>{shift.startTime} - {shift.endTime}</p>
-                                        {shift.notes && <p className="text-xxs italic mt-0.5 truncate">{shift.notes.split('\n')[0]}</p>}
-                                    </div>
-                                )}
-                            </div>
-                        );
-                    })}
-                </div>
-                <div className="mt-4 text-xs text-gray-600 flex items-center space-x-4">
-                    {/* Legend... remains same */}
-                    <div className="flex items-center">
-                       <span className="w-3 h-3 rounded-sm bg-purple-100 border border-purple-200 mr-1.5"></span>
-                       <span>Quart Assigné</span>
+            <div className="space-y-6">
+                {/* ====== EN-TÊTE ====== */}
+                <div className="flex items-center">
+                    <div className="p-3 bg-purple-600 rounded-2xl shadow-lg mr-4">
+                        <FiCalendar className="text-white text-2xl" />
+                    </div>
+                    <div>
+                        <h1 className="text-3xl font-bold text-gray-800">Mon Planning</h1>
+                        <p className="text-gray-600">Consultez vos prochains quarts de travail.</p>
+                        {/* Debug info */}
+                        <p className="text-xs text-gray-500 mt-1 flex items-center">
+                            <FiAlertCircle className="mr-1" />
+                            {debugInfo}
+                        </p>
                     </div>
                 </div>
-            </div>
 
-            {/* ** Render the Modal ** */}
+                {/* ====== CALENDRIER ====== */}
+                <Card 
+                    title={format(currentMonth, 'MMMM yyyy', { locale: fr })}
+                    headerContent={
+                        <div className="flex items-center space-x-2">
+                            <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                onClick={goToPreviousMonth}
+                                aria-label="Mois précédent"
+                            >
+                                <FiChevronLeft size={20}/>
+                            </Button>
+                            <Button 
+                                variant="secondary" 
+                                size="sm" 
+                                onClick={goToToday}
+                            >
+                                Aujourd'hui
+                            </Button>
+                            <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                onClick={goToNextMonth}
+                                aria-label="Mois suivant"
+                            >
+                                <FiChevronRight size={20}/>
+                            </Button>
+                        </div>
+                    }
+                >
+                    <div className="grid grid-cols-7 border-t border-l border-gray-200">
+                        {/* En-têtes des jours de la semaine */}
+                        {dayNames.map(day => (
+                            <div 
+                                key={day} 
+                                className="py-2 text-center text-xs font-semibold text-gray-600 bg-gray-50 border-r border-b border-gray-200 capitalize"
+                            >
+                                {day}
+                            </div>
+                        ))}
+
+                        {/* Grille des jours du mois */}
+                        {daysInGrid.map((day, i) => {
+                            const shift = getShiftForDay(day);
+                            const isCurrentMonth = isSameMonth(day, currentMonth);
+                            const hasShift = !!shift;
+                            const isToday = isSameDay(day, today);
+                            
+                            return (
+                                <div 
+                                    key={i} 
+                                    className={`relative p-2 min-h-[120px] border-r border-b border-gray-200 flex flex-col transition-colors duration-200
+                                        ${!isCurrentMonth ? 'bg-gray-50' : 'bg-white'}
+                                        ${hasShift && isCurrentMonth ? 'ring-1 ring-purple-200 hover:bg-purple-50' : ''}
+                                        ${hasShift && isCurrentMonth ? 'cursor-pointer' : ''}`
+                                    }
+                                    onClick={() => hasShift && isCurrentMonth && handleDayClick(day)}
+                                >
+                                    <div className="flex justify-between items-start mb-1">
+                                        {/* Numéro du jour */}
+                                        <time 
+                                            dateTime={format(day, 'yyyy-MM-dd')}
+                                            className={`font-semibold text-sm ${
+                                                isToday 
+                                                    ? 'flex items-center justify-center w-6 h-6 rounded-full bg-purple-600 text-white' 
+                                                    : ''
+                                            } ${!isCurrentMonth ? 'text-gray-400' : 'text-gray-900'}`}
+                                        >
+                                            {format(day, 'd')}
+                                        </time>
+
+                                        {/* Bouton de détail */}
+                                        {hasShift && isCurrentMonth && (
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                className="!p-1 h-6 w-6 bg-purple-100 hover:bg-purple-200 border border-purple-300 opacity-80 hover:opacity-100"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleDayClick(day);
+                                                }}
+                                                title={`Voir les détails: ${shift.type}`}
+                                            >
+                                                <FiEye className="text-purple-700 text-sm" />
+                                            </Button>
+                                        )}
+                                    </div>
+                                    
+                                    {/* Bloc d'information du shift */}
+                                    {hasShift && isCurrentMonth && (
+                                        <div className="mt-1 p-2 rounded-md bg-purple-100 text-purple-800 text-xs leading-tight flex-grow">
+                                            <p className="font-semibold truncate">{shift.type}</p>
+                                            <p className="text-purple-600">{shift.startTime} - {shift.endTime}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
+                </Card>
+                
+                {/* Message si aucun shift */}
+                {userShifts.length === 0 && (
+                    <Card title="Aucun planning">
+                        <div className="text-center py-8 text-gray-500">
+                            <FiCalendar className="mx-auto mb-4 text-4xl" />
+                            <p>Aucun quart de travail programmé pour le moment.</p>
+                        </div>
+                    </Card>
+                )}
+            </div>
+            
+            {/* Modal de détail */}
             <ShiftDetailModal
                 shift={selectedShift}
                 onClose={closeModal}

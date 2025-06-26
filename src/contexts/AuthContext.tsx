@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 export type RoleType = 'pompiste' | 'caissier' | 'chef_de_piste' | 'gerant';
 
 export interface User {
+  avatarUrl: string;
+  telephone: string;
   id: string;
   email: string;
   name: string;
@@ -21,10 +23,58 @@ interface AuthContextType {
 }
 
 const CREDENTIALS = {
-  'pompiste@station.cm': { password: 'pompiste123', user: { id: '1', email: 'pompiste@station.cm', name: 'Natalya Pompiste', role: 'pompiste' as RoleType, roleLabel: 'Pompiste', initial: 'N' }},
-  'caissier@station.cm': { password: 'caissier123', user: { id: '2', email: 'caissier@station.cm', name: 'Jean Caissier', role: 'caissier' as RoleType, roleLabel: 'Caissier', initial: 'J' }},
-  'chef@station.cm': { password: 'chef123', user: { id: '3', email: 'chef@station.cm', name: 'Amina Chef', role: 'chef_de_piste' as RoleType, roleLabel: 'Chef de Piste', initial: 'A' }},
-  'gerant@station.cm': { password: 'gerant123', user: { id: '4', email: 'gerant@station.cm', name: 'Moussa Gérant', role: 'gerant' as RoleType, roleLabel: 'Gérant', initial: 'M' }},
+  'pompiste@station.cm': {
+    password: 'pompiste123',
+    user: {
+      id: '1',
+      email: 'pompiste@station.cm',
+      name: 'Natalya Pompiste',
+      role: 'pompiste' as RoleType,
+      roleLabel: 'Pompiste',
+      initial: 'N',
+      avatarUrl: 'https://ui-avatars.com/api/?name=Natalya+Pompiste&background=8B5CF6&color=fff&size=128',
+      telephone: '+221700000001'
+    }
+  },
+  'caissier@station.cm': {
+    password: 'caissier123',
+    user: {
+      id: '2',
+      email: 'caissier@station.cm',
+      name: 'Jean Caissier',
+      role: 'caissier' as RoleType,
+      roleLabel: 'Caissier',
+      initial: 'J',
+      avatarUrl: 'https://ui-avatars.com/api/?name=Jean+Caissier&background=8B5CF6&color=fff&size=128',
+      telephone: '+221700000002'
+    }
+  },
+  'chef@station.cm': {
+    password: 'chef123',
+    user: {
+      id: '3',
+      email: 'chef@station.cm',
+      name: 'Amina Chef',
+      role: 'chef_de_piste' as RoleType,
+      roleLabel: 'Chef de Piste',
+      initial: 'A',
+      avatarUrl: 'https://ui-avatars.com/api/?name=Amina+Chef&background=8B5CF6&color=fff&size=128',
+      telephone: '+221700000003'
+    }
+  },
+  'gerant@station.cm': {
+    password: 'gerant123',
+    user: {
+      id: '4',
+      email: 'gerant@station.cm',
+      name: 'Moussa Gérant',
+      role: 'gerant' as RoleType,
+      roleLabel: 'Gérant',
+      initial: 'M',
+      avatarUrl: 'https://ui-avatars.com/api/?name=Moussa+Gérant&background=8B5CF6&color=fff&size=128',
+      telephone: '+221700000004'
+    }
+  }
 };
 
 const ROLE_DASHBOARDS = {
